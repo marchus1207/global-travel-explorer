@@ -1,187 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Travel Explorer - Interactive Travel Planning Map</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background-color: #f9f9f9;
-        }
-        header {
-            background-color: #0069aa;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .intro {
-            text-align: center;
-            padding: 40px 0;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .intro h2 {
-            color: #0069aa;
-            margin-bottom: 20px;
-        }
-        .intro p {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #ff4d00;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-top: 15px;
-        }
-        .cta-button:hover {
-            background-color: #e04400;
-        }
-        .map-container {
-            height: 600px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            margin: 20px auto 40px auto;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            padding: 40px 0;
-        }
-        .feature {
-            width: 30%;
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        .feature h3 {
-            color: #0069aa;
-            margin-top: 0;
-        }
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
-        }
-        .coming-soon {
-            background-color: #fffbea;
-            border: 1px dashed #ffcc00;
-            padding: 15px;
-            text-align: center;
-            border-radius: 5px;
-            margin: 40px 0;
-        }
-        .partner-logos {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 40px 0;
-        }
-        .partner-logos div {
-            padding: 15px;
-            opacity: 0.7;
-            font-weight: bold;
-            color: #666;
-        }
-        @media (max-width: 768px) {
-            .feature {
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Global Travel Explorer - Interactive Travel Planning Map</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<style>
+  /* Reset some basics */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0;
+    color: #333;
+    background: linear-gradient(135deg, #eaf6fc, #f9fbfd);
+    line-height: 1.6;
+  }
+
+  /* Sticky header with shadow */
+  header {
+    background: linear-gradient(90deg, #0072c6, #004d7a);
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.75rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  header p {
+    font-size: 1.15rem;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  /* Navigation bar */
+  .nav {
+    background: #004268;
+    box-shadow: inset 0 -3px 8px rgba(255,255,255,0.1);
+    position: sticky;
+    top: 88px; /* height of header */
+    z-index: 900;
+  }
+  .nav .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .nav a {
+    color: white;
+    text-decoration: none;
+    padding: 18px 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 4px;
+    margin: 6px 8px;
+  }
+  .nav a:hover,
+  .nav a:focus {
+    background-color: #0072c6;
+    box-shadow: 0 2px 8px rgba(0,114,198,0.6);
+    outline: none;
+  }
+
+  /* Container for page content */
+  .container {
+    max-width: 1100px;
+    margin: 40px auto 60px auto;
+    padding: 0 25px;
+  }
+
+  /* Intro Section */
+  .intro {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 50px auto;
+  }
+  .intro h2 {
+    font-size: 2.25rem;
+    color: #004d7a;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .intro p {
+    font-size: 1.125rem;
+    margin-bottom: 18px;
+    color: #555;
+  }
+  .cta-button {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff5500, #ff6e00);
+    color: white;
+    padding: 15px 35px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 14px rgba(255,85,0,0.5);
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+  .cta-button:hover,
+  .cta-button:focus {
+    background: linear-gradient(90deg, #e04a00, #cc5a00);
+    box-shadow: 0 8px 20px rgba(224,74,0,0.7);
+    outline: none;
+  }
+
+  /* Coming Soon Banner */
+  .coming-soon {
+    background: #fff9db;
+    border: 2px dashed #ffc107;
+    padding: 25px 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    color: #805c00;
+    box-shadow: 0 3px 8px rgba(255,193,7,0.3);
+    max-width: 750px;
+    margin: 50px auto 60px auto;
+    font-size: 1.1rem;
+  }
+  .coming-soon h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #ffb300;
+  }
+
+  /* Map Container */
+  .map-container {
+    height: 650px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    margin-bottom: 70px;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Features Grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 30px;
+    margin-bottom: 70px;
+  }
+  .feature {
+    background: white;
+    padding: 30px 28px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .feature:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  }
+  .feature h3 {
+    color: #004d7a;
+    font-size: 1.35rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .feature p {
+    color: #555;
+    font-size: 1rem;
+  }
+
+  /* Partner Logos */
+  .partner-logos {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 70px;
+  }
+  .partner-logos div {
+    background: white;
+    color: #666;
+    font-weight: 700;
+    padding: 20px 40px;
+    border-radius: 40px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    cursor: default;
+  }
+  .partner-logos div:hover {
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Footer */
+  footer {
+    background-color: #222;
+    color: #ddd;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  footer a {
+    color: #ff6e00;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  footer a:hover,
+  footer a:focus {
+    color: #ff8c33;
+    outline: none;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    header h1 {
+      font-size: 2rem;
+    }
+    .intro h2 {
+      font-size: 1.75rem;
+    }
+    .partner-logos {
+      justify-content: center;
+    }
+    .partner-logos div {
+      padding: 18px 30px;
+      font-size: 1rem;
+    }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Global Travel Explorer</h1>
-            <p>The ultimate interactive map for planning your perfect adventure worldwide</p>
-        </div>
-    </header>
 
-    <div class="nav" style="background-color: #004d7a; text-align: center;">
-        <div class="container">
-            <a href="index.html" style="color: white; display: inline-block; padding: 15px 20px; text-decoration: none;">Home</a>
-            <a href="about.html" style="color: white; display: inline-block; padding: 15px 20px; text-decoration: none;">About</a>
-            <a href="privacy.html" style="color: white; display: inline-block; padding: 15px 20px; text-decoration: none;">Privacy Policy</a>
-        </div>
-    </div>
+<header>
+  <div class="container">
+    <h1>Global Travel Explorer</h1>
+    <p>The ultimate interactive map for planning your perfect adventure worldwide</p>
+  </div>
+</header>
 
-    <div class="container">
-        <div class="intro">
-            <h2>Plan Your Dream Trip Around the World</h2>
-            <p>Discover breathtaking destinations worldwide with our comprehensive interactive map showcasing the planet's most remarkable places.</p>
-            <p>Whether you're planning to visit the Great Wall of China, explore the Northern Lights, relax on the beaches of Bora Bora, or wander through ancient ruins of Petra, our map makes it easy to find everything you need for your global adventures!</p>
-            <a href="#explore" class="cta-button">Explore the Map</a>
-        </div>
+<div class="nav">
+  <div class="container">
+    <a href="index.html" tabindex="1">Home</a>
+    <a href="about.html" tabindex="2">About</a>
+    <a href="privacy.html" tabindex="3">Privacy Policy</a>
+  </div>
+</div>
 
-        <div class="coming-soon">
-            <h3>✨ Coming Soon: Complete Travel Planning Tools ✨</h3>
-            <p>We're enhancing our map with direct hotel bookings, restaurant reservations, hiking trail guides, and car rentals - all in one place!</p>
-        </div>
+<div class="container">
+  <section class="intro" aria-label="Introduction">
+    <h2>Plan Your Dream Trip Around the World</h2>
+    <p>Discover breathtaking destinations worldwide with our comprehensive interactive map showcasing the planet's most remarkable places.</p>
+    <p>Whether you're planning to visit the Great Wall of China, explore the Northern Lights, relax on the beaches of Bora Bora, or wander through ancient ruins of Petra, our map makes it easy to find everything you need for your global adventures!</p>
+    <a href="#explore" class="cta-button" tabindex="4">Explore the Map</a>
+  </section>
 
-        <div class="map-container" id="explore">
-            <iframe src="map_interactive.html" title="Global Interactive Travel Map"></iframe>
-        </div>
+  <section class="coming-soon" aria-live="polite" role="region" aria-label="Coming Soon Announcement">
+    <h3>✨ Coming Soon: Complete Travel Planning Tools ✨</h3>
+    <p>We're enhancing our map with direct hotel bookings, restaurant reservations, hiking trail guides, and car rentals - all in one place!</p>
+  </section>
 
-        <div class="features">
-            <div class="feature">
-                <h3>Discover Hidden Gems</h3>
-                <p>Find both popular attractions and off-the-beaten-path locations throughout the world, complete with descriptions and travel tips.</p>
-            </div>
-            <div class="feature">
-                <h3>Plan Your Accommodations</h3>
-                <p>Soon you'll be able to find and book the perfect places to stay near every attraction, from luxury hotels to cozy cabins.</p>
-            </div>
-            <div class="feature">
-                <h3>Complete Travel Resources</h3>
-                <p>Our map will connect you with restaurants, hiking trails, transportation options, and everything else you need for a perfect trip.</p>
-            </div>
-        </div>
+  <section class="map-container" id="explore" aria-label="Interactive Travel Map">
+    <iframe src="map_interactive.html" title="Global Interactive Travel Map"></iframe>
+  </section>
 
-        <div class="partner-logos">
-            <div>BOOKING.COM</div>
-            <div>TRIPADVISOR</div>
-            <div>ALLTRAILS</div>
-            <div>EXPEDIA</div>
-            <div>RENTALCARS</div>
-        </div>
-    </div>
+  <section class="features" aria-label="Key Features">
+    <article class="feature">
+      <h3>Discover Hidden Gems</h3>
+      <p>Find both popular attractions and off-the-beaten-path locations throughout the world, complete with descriptions and travel tips.</p>
+    </article>
+    <article class="feature">
+      <h3>Plan Your Accommodations</h3>
+      <p>Soon you'll be able to find and book the perfect places to stay near every attraction, from luxury hotels to cozy cabins.</p>
+    </article>
+    <article class="feature">
+      <h3>Complete Travel Resources</h3>
+      <p>Our map will connect you with restaurants, hiking trails, transportation options, and everything else you need for a perfect trip.</p>
+    </article>
+  </section>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 Global Travel Explorer. All rights reserved.</p>
-            <p><a href="mailto:contact@example.com" style="color: white;">Contact Us</a> | <a href="privacy.html" style="color: white;">Privacy Policy</a></p>
-        </div>
-    </footer>
+  <section class="partner-logos" aria-label="Our Partners">
+    <div tabindex="0" aria-label="Partner Booking.com">BOOKING.COM</div>
+    <div tabindex="0" aria-label="Partner TripAdvisor">TRIPADVISOR</div>
+    <div tabindex="0" aria-label="Partner AllTrails">ALLTRAILS</div>
+    <div tabindex="0" aria-label="Partner Expedia">EXPEDIA</div>
+    <div tabindex="0" aria-label="Partner Rentalcars">RENTALCARS</div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <p>© 2025 Global Travel Explorer. All rights reserved.</p>
+    <p>
+      <a href="mailto:contact@example.com" tabindex="5">Contact Us</a> | 
+      <a href="privacy.html" tabindex="6">Privacy Policy</a>
+    </p>
+  </div>
+</footer>
+
 </body>
 </html>

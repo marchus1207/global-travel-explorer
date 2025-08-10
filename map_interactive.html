@@ -1,39 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link 
-    rel="stylesheet" 
-    href="https://unpkg.com/swiper@11.1.1/swiper-bundle.min.css" 
-    crossorigin="anonymous" 
-  />
+  <link rel="stylesheet" href="lib/swiper/swiper-bundle.min.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Global Interactive Travel Map</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-    crossorigin="anonymous"
-  />
-  <link 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
-    rel="stylesheet"
-    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
-    crossorigin="anonymous" 
-    referrerpolicy="no-referrer" 
-  />
+  <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="lib/markercluster/MarkerCluster.css" />
+  <link rel="stylesheet" href="lib/markercluster/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="lib/fontawesome/all.min.css" />
   <style>
     body, html {
       width: 100vw;
@@ -558,10 +535,16 @@
   </style>
 </head>
 <body>
-  <script 
-    src="https://unpkg.com/swiper@11.1.1/swiper-bundle.min.js"
-    crossorigin="anonymous"></script>
-  <div id="map"></div>
+  <script src="lib/swiper/swiper-bundle.min.js"></script>
+  <div id="map">
+    <!-- Loading indicator -->
+    <div id="loading" style="position: absolute; z-index: 999; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.85); padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.2); text-align: center;">
+      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #007bff;">
+        <i class="fas fa-globe-americas fa-spin" style="margin-right: 8px;"></i> Loading Global Travel Explorer...
+      </div>
+      <div style="font-size: 14px; color: #555;">Please wait while we prepare your adventure</div>
+    </div>
+  </div>
   
   <!-- Fullscreen Gallery Modal -->
   <div id="fullscreen-gallery">
@@ -576,13 +559,8 @@
     </div>
   </div>
 
-  <script 
-    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-    crossorigin="anonymous"></script>
-  <script 
-    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    crossorigin="anonymous"></script>
+  <script src="lib/leaflet/leaflet.js"></script>
+  <script src="lib/markercluster/leaflet.markercluster.js"></script>
   <script>
     // Initialize the map centered on the world for better global experience
     // Set bounds to the world and prevent panning/zooming out to see repeated maps
@@ -1428,12 +1406,13 @@
 
     // Main function to initialize the map markers
     async function initMap() {
-      const placesResult = await loadPlaces();
-      const placesData = placesResult.data;
-      const isEnhanced = placesResult.isEnhanced;
-      
-      // Store the original enhanced data for reference if available
-      const enhancedData = placesResult.originalData;
+      try {
+        const placesResult = await loadPlaces();
+        const placesData = placesResult.data;
+        const isEnhanced = placesResult.isEnhanced;
+        
+        // Store the original enhanced data for reference if available
+        const enhancedData = placesResult.originalData;
 
       // Add all places markers (both free and premium)
       await addMarkers(placesData.free_places, markersCluster, false);
@@ -1472,10 +1451,25 @@
           }, 200);
         });
       }
+      
+      // Return a resolved promise to indicate completion
+      return Promise.resolve();
+      
+      } catch (error) {
+        console.error("Error in initMap:", error);
+        return Promise.reject(error);
+      }
     }
 
     // Start the map
-    initMap();
+    initMap().then(() => {
+      // Hide loading indicator when the map is ready
+      document.getElementById('loading').style.display = 'none';
+    }).catch(error => {
+      console.error("Error initializing map:", error);
+      // Still hide the loading indicator if there's an error
+      document.getElementById('loading').style.display = 'none';
+    });
   </script>
 </body>
 </html>
