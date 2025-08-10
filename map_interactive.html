@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.css" />
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.css" 
+    integrity="sha512-xdX4bmDgZzmQe1jJGpkWxAxmYl2L8+8YZylV5OUJurgN/lJwlL5sQKQqJX0jOJpzGcxD48yPJIxQbSqcKK6ALA==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Norway Interactive Travel Map</title>
+  <title>Global Interactive Travel Map</title>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+    crossorigin="anonymous"
   />
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    integrity="sha256-+bdWuWOXMFkX0v9Cvr3OWClPiYefDQz9GGZP/7xZxdc="
+    crossorigin="anonymous"
   />
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    integrity="sha256-LGDoWz9ADXvIOqcAdLDmCtZaZYGrxXNYYR7sX3+vPqs="
+    crossorigin="anonymous"
   />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+    rel="stylesheet"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
   <style>
     body, html {
       width: 100vw;
@@ -99,9 +117,7 @@
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .leaflet-marker-icon.round-icon.premium {
-      background: #ffb300;
-    }
+
     .leaflet-popup-content {
       font-family: 'Segoe UI', Arial, sans-serif;
       font-size: 1.08rem;
@@ -159,13 +175,7 @@
       letter-spacing: 0.2px;
       text-shadow: 0 1px 8px rgba(0,123,255,0.08);
     }
-    .popup-premium {
-      color: #ffb300;
-      font-weight: bold;
-      font-size: 1.02rem;
-      margin-bottom: 6px;
-      letter-spacing: 0.2px;
-    }
+
     /* Vertical gallery styles for popups */
     .vertical-gallery {
       width: 100%;
@@ -578,8 +588,11 @@
   </style>
 </head>
 <body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.js"></script>
-  <button id="premium-btn" title="Click to unlock premium places">Unlock Premium Places</button>
+  <script 
+    src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.js"
+    integrity="sha512-/mcWLin9qTJeREsnrY5LMI1B/+32h/3J7fNHs0hQCAft71OUHRcK7CadcXBp3qSQgxOPpvpVkMBDeXEOQk+PVQ==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer"></script>
   <div id="map"></div>
   
   <!-- Fullscreen Gallery Modal -->
@@ -595,10 +608,16 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script 
+    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin="anonymous"></script>
+  <script 
+    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    integrity="sha256-adsLYkUWwGmTWwFODXQLbRNVhs0EJPkOmgHSVhLxYpY="
+    crossorigin="anonymous"></script>
   <script>
-    // Initialize the map centered on Norway for better mobile experience
+    // Initialize the map centered on the world for better global experience
     // Set bounds to the world and prevent panning/zooming out to see repeated maps
     // Use the true world bounds for Web Mercator (Leaflet default)
     const southWest = L.latLng(-85.05112878, -180);
@@ -607,8 +626,8 @@
     
     // Get initial view based on device
     const isMobile = window.innerWidth <= 768;
-    const initialZoom = isMobile ? 2.5 : 3.5;
-    const initialCenter = [62, 8]; // Centered on Norway
+    const initialZoom = isMobile ? 1.5 : 2;
+    const initialCenter = [20, 0]; // Centered on the world
     
     const map = L.map('map', {
       minZoom: isMobile ? 1.5 : 2,
@@ -630,9 +649,8 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }).addTo(map);
 
-    // Marker cluster groups for free and premium places
-    const freeMarkers = L.markerClusterGroup();
-    const premiumMarkers = L.markerClusterGroup();
+    // Marker cluster group for all places
+    const markersCluster = L.markerClusterGroup();
 
     // Your Unsplash API Access Key (replace with your own for production)
     // You can get a free key at https://unsplash.com/developers
@@ -666,12 +684,12 @@
     async function loadPlaces() {
       try {
         // Try to load the enhanced travel guide first
-        const res = await fetch('norway_travel_guide.json');
+        const res = await fetch('travel_destinations.json');
         const data = await res.json();
         
         // If it's the enhanced version, convert it to the format our current code expects
         if (data.categories && data.categories.destinations) {
-          console.log("Loading enhanced travel guide data");
+          console.log("Loading global travel guide data");
           
           // Convert the new format to the old format for backward compatibility
           const convertedData = {
@@ -689,11 +707,8 @@
               metadata: destination
             };
             
-            if (destination.isPremium) {
-              convertedData.premium_places.push(placeData);
-            } else {
-              convertedData.free_places.push(placeData);
-            }
+            // All places are now treated as free
+            convertedData.free_places.push(placeData);
           });
           
           return {
@@ -710,11 +725,45 @@
       } catch (e) {
         console.log("Enhanced travel guide not found, falling back to basic places data");
         
-        // Fall back to the original places JSON if the enhanced one isn't available
-        const res = await fetch('norway_places.json');
-        const data = await res.json();
+        // Create a fallback dataset with world locations
+        const fallbackData = {
+          free_places: [
+            {
+              name: "Eiffel Tower",
+              coordinates: [48.8584, 2.2945],
+              description: "Iconic wrought-iron lattice tower on the Champ de Mars in Paris, France.",
+              image_queries: ["Eiffel Tower Paris"]
+            },
+            {
+              name: "Machu Picchu",
+              coordinates: [-13.1631, -72.5450],
+              description: "15th-century Inca citadel located in southern Peru on a mountain ridge.",
+              image_queries: ["Machu Picchu Peru"]
+            },
+            {
+              name: "Great Barrier Reef",
+              coordinates: [-18.2871, 147.6992],
+              description: "World's largest coral reef system off the coast of Queensland, Australia.",
+              image_queries: ["Great Barrier Reef Australia"]
+            },
+            {
+              name: "Mount Fuji",
+              coordinates: [35.3606, 138.7274],
+              description: "Japan's tallest peak and an active volcano that last erupted in 1707.",
+              image_queries: ["Mount Fuji Japan"]
+            },
+            {
+              name: "Grand Canyon",
+              coordinates: [36.0544, -112.2401],
+              description: "Steep-sided canyon carved by the Colorado River in Arizona, United States.",
+              image_queries: ["Grand Canyon Arizona"]
+            }
+          ],
+          premium_places: []
+        };
+        
         return {
-          data: data,
+          data: fallbackData,
           isEnhanced: false
         };
       }
@@ -724,17 +773,17 @@
     function createPhotoIcon(imgUrl, isPremium = false) {
       if (imgUrl) {
         return L.divIcon({
-          className: `round-icon leaflet-marker-icon ${isPremium ? 'premium' : ''}`,
+          className: 'round-icon leaflet-marker-icon',
           iconSize: [48, 48],
-          html: `<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.18);background:${isPremium ? '#ffb300' : '#007bff'};display:flex;align-items:center;justify-content:center;"><img src='${imgUrl}' style='width:100%;height:100%;object-fit:cover;' alt="Location photo"/></div>`
+          html: `<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.18);background:#007bff;display:flex;align-items:center;justify-content:center;"><img src='${imgUrl}' style='width:100%;height:100%;object-fit:cover;' alt="Location photo"/></div>`
         });
       } else {
         // fallback to color icon
         return L.divIcon({
-          className: `round-icon leaflet-marker-icon ${isPremium ? 'premium' : ''}`,
+          className: 'round-icon leaflet-marker-icon',
           iconSize: [36, 36],
           html: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="12" cy="12" r="11" stroke="white" stroke-width="2" fill="${isPremium ? '#ffb300' : '#007bff'}"/>
+            <circle cx="12" cy="12" r="11" stroke="white" stroke-width="2" fill="#007bff"/>
             <circle cx="12" cy="12" r="6" fill="white"/>
           </svg>`
         });
@@ -781,7 +830,6 @@
           
           popupContent = `
             <div class="popup-title">${place.name}</div>
-            ${isPremium ? '<div class="popup-premium">Premium Place</div>' : ''}
             ${galleryHtml}
             <div style="margin-top:15px;">${place.description}</div>
             ${createFeatureTabs(destination)}
@@ -790,7 +838,6 @@
           // Basic version
           popupContent = `
             <div class="popup-title">${place.name}</div>
-            ${isPremium ? '<div class="popup-premium">Premium Place</div>' : ''}
             ${galleryHtml}
             <div style="margin-top:10px;">${place.description}</div>
           `;
@@ -1382,19 +1429,15 @@
       // Store the original enhanced data for reference if available
       const enhancedData = placesResult.originalData;
 
-      // Add free places markers
-      await addMarkers(placesData.free_places, freeMarkers, false);
-      freeMarkers.addTo(map);
-
-      // Button to unlock premium places
-      const premiumBtn = document.getElementById('premium-btn');
-      premiumBtn.addEventListener('click', async () => {
-        premiumBtn.disabled = true;
-        premiumBtn.textContent = 'Loading Premium Places...';
-        await addMarkers(placesData.premium_places, premiumMarkers, true);
-        premiumMarkers.addTo(map);
-        premiumBtn.style.display = 'none';
-      });
+      // Add all places markers (both free and premium)
+      await addMarkers(placesData.free_places, markersCluster, false);
+      
+      // Add premium places markers too
+      if (placesData.premium_places && placesData.premium_places.length > 0) {
+        await addMarkers(placesData.premium_places, markersCluster, true);
+      }
+      
+      markersCluster.addTo(map);
       
       // Setup fullscreen gallery close button
       document.getElementById('close-gallery').addEventListener('click', () => {

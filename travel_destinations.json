@@ -1,0 +1,246 @@
+{
+  "categories": {
+    "destinations": [
+      {
+        "name": "Eiffel Tower",
+        "coordinates": [48.8584, 2.2945],
+        "description": "Iconic wrought-iron lattice tower on the Champ de Mars in Paris, France. Built in 1889, it's one of the world's most recognizable landmarks.",
+        "image_queries": ["Eiffel Tower Paris", "Paris landmark"],
+        "travelTips": "Visit early morning or late evening to avoid crowds. Book tickets online to skip the line.",
+        "metadata": {
+          "country": "France",
+          "city": "Paris",
+          "bestTimeToVisit": "April-June, September-October",
+          "nearbyAttractions": ["Louvre Museum", "Notre-Dame Cathedral", "Arc de Triomphe"],
+          "averageRating": 4.5,
+          "websiteUrl": "https://www.toureiffel.paris/en"
+        }
+      },
+      {
+        "name": "Machu Picchu",
+        "coordinates": [-13.1631, -72.5450],
+        "description": "15th-century Inca citadel located in southern Peru on a mountain ridge above the Sacred Valley. It's renowned for its sophisticated dry-stone walls and panoramic views.",
+        "image_queries": ["Machu Picchu Peru", "Inca ruins Peru"],
+        "travelTips": "Buy entrance tickets well in advance. Consider hiring a guide to learn the history of this ancient site.",
+        "metadata": {
+          "country": "Peru",
+          "region": "Cusco Region",
+          "bestTimeToVisit": "May-October (dry season)",
+          "nearbyAttractions": ["Sacred Valley", "Cusco", "Inca Trail"],
+          "averageRating": 4.9,
+          "websiteUrl": "https://www.machupicchu.gob.pe/"
+        }
+      },
+      {
+        "name": "Great Barrier Reef",
+        "coordinates": [-18.2871, 147.6992],
+        "description": "World's largest coral reef system composed of over 2,900 individual reefs and 900 islands stretching for over 2,300 kilometers off the coast of Queensland, Australia.",
+        "image_queries": ["Great Barrier Reef Australia", "Coral reef diving"],
+        "travelTips": "The best way to experience the reef is through snorkeling or diving tours from Cairns or Port Douglas.",
+        "metadata": {
+          "country": "Australia",
+          "region": "Queensland",
+          "bestTimeToVisit": "June-October",
+          "nearbyAttractions": ["Daintree Rainforest", "Whitsunday Islands", "Cairns"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://greatbarrierreef.org/"
+        }
+      },
+      {
+        "name": "Mount Fuji",
+        "coordinates": [35.3606, 138.7274],
+        "description": "Japan's tallest peak and an active volcano that last erupted in 1707. It's considered sacred and has inspired artists and poets for centuries.",
+        "image_queries": ["Mount Fuji Japan", "Fujisan Japan"],
+        "travelTips": "Climbing season is July to September. For the best views, visit the Chureito Pagoda or Lake Kawaguchiko.",
+        "metadata": {
+          "country": "Japan",
+          "region": "Honshu Island",
+          "bestTimeToVisit": "July-September for climbing, November-February for views",
+          "nearbyAttractions": ["Fuji Five Lakes", "Hakone", "Chureito Pagoda"],
+          "averageRating": 4.7,
+          "websiteUrl": "https://www.fujisan-climb.jp/en/"
+        }
+      },
+      {
+        "name": "Grand Canyon",
+        "coordinates": [36.0544, -112.2401],
+        "description": "Steep-sided canyon carved by the Colorado River in Arizona, United States. It's one of the Seven Natural Wonders of the World and reveals billions of years of geological history.",
+        "image_queries": ["Grand Canyon Arizona", "Grand Canyon South Rim"],
+        "travelTips": "The South Rim is open year-round and offers the best viewpoints. Consider hiking below the rim for a more immersive experience.",
+        "metadata": {
+          "country": "United States",
+          "state": "Arizona",
+          "bestTimeToVisit": "March-May and September-November",
+          "nearbyAttractions": ["Antelope Canyon", "Horseshoe Bend", "Sedona"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://www.nps.gov/grca/"
+        }
+      },
+      {
+        "name": "Santorini",
+        "coordinates": [36.3932, 25.4615],
+        "description": "Stunning Greek island in the Aegean Sea known for its white-washed buildings with blue domes, dramatic cliffs, and spectacular sunsets.",
+        "image_queries": ["Santorini Greece", "Oia sunset Santorini"],
+        "travelTips": "Visit in shoulder season (April-May or September-October) to avoid crowds. Don't miss the sunset in Oia.",
+        "metadata": {
+          "country": "Greece",
+          "region": "Cyclades Islands",
+          "bestTimeToVisit": "April-June, September-October",
+          "nearbyAttractions": ["Red Beach", "Ancient Thera", "Akrotiri Archaeological Site"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://www.santorini.gr/"
+        }
+      },
+      {
+        "name": "Taj Mahal",
+        "coordinates": [27.1751, 78.0421],
+        "description": "Ivory-white marble mausoleum on the south bank of the Yamuna river in the Indian city of Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan to house the tomb of his favorite wife.",
+        "image_queries": ["Taj Mahal Agra India", "Taj Mahal marble"],
+        "travelTips": "Visit at sunrise to avoid crowds and capture the best photos. Closed on Fridays.",
+        "metadata": {
+          "country": "India",
+          "city": "Agra",
+          "bestTimeToVisit": "October-March",
+          "nearbyAttractions": ["Agra Fort", "Fatehpur Sikri", "Mehtab Bagh"],
+          "averageRating": 4.9,
+          "websiteUrl": "https://www.tajmahal.gov.in/"
+        }
+      },
+      {
+        "name": "Serengeti National Park",
+        "coordinates": [-2.3333, 34.8333],
+        "description": "Tanzania's oldest and most popular national park, famous for its annual migration of over 1.5 million wildebeest and 250,000 zebra.",
+        "image_queries": ["Serengeti National Park", "Wildebeest migration Tanzania"],
+        "travelTips": "The best time to witness the wildebeest migration is June to August. Book safaris well in advance.",
+        "metadata": {
+          "country": "Tanzania",
+          "region": "Northern Tanzania",
+          "bestTimeToVisit": "June-October for wildlife viewing",
+          "nearbyAttractions": ["Ngorongoro Crater", "Lake Manyara", "Mount Kilimanjaro"],
+          "averageRating": 4.9,
+          "websiteUrl": "https://www.serengeti.org/"
+        }
+      },
+      {
+        "name": "Northern Lights (Aurora Borealis)",
+        "coordinates": [68.3731, 18.8259],
+        "description": "Natural light display in the Earth's sky, predominantly seen in high-latitude regions. This location in Abisko, Sweden is one of the best places to view them.",
+        "image_queries": ["Northern Lights Sweden", "Aurora Borealis"],
+        "travelTips": "Visit between September and March for the best chance to see the lights. Allow at least 3 nights to increase your chances.",
+        "metadata": {
+          "country": "Sweden",
+          "region": "Lapland",
+          "bestTimeToVisit": "September-March",
+          "nearbyAttractions": ["Ice Hotel", "Dog Sledding", "Sami Cultural Experiences"],
+          "averageRating": 4.7,
+          "websiteUrl": "https://www.auroraskystation.com/"
+        }
+      },
+      {
+        "name": "Great Wall of China",
+        "coordinates": [40.4319, 116.5704],
+        "description": "Ancient fortification system built across the historical northern borders of China to protect against invasions. This coordinate points to the restored Mutianyu section.",
+        "image_queries": ["Great Wall of China Mutianyu", "Great Wall mountains"],
+        "travelTips": "Mutianyu is less crowded than Badaling. Take the cable car up and toboggan down for a fun experience.",
+        "metadata": {
+          "country": "China",
+          "region": "Beijing Municipality",
+          "bestTimeToVisit": "April-May, September-October",
+          "nearbyAttractions": ["Forbidden City", "Temple of Heaven", "Summer Palace"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://www.mutianyugreatwall.com/"
+        }
+      },
+      {
+        "name": "Bora Bora",
+        "coordinates": [-16.5004, -151.7415],
+        "description": "Small South Pacific island northwest of Tahiti in French Polynesia, known for its turquoise lagoon, overwater bungalows, and luxurious resorts.",
+        "image_queries": ["Bora Bora French Polynesia", "Bora Bora overwater bungalows"],
+        "travelTips": "Save by booking a garden bungalow and enjoying the same beaches and activities as those in overwater bungalows.",
+        "metadata": {
+          "country": "French Polynesia",
+          "region": "Society Islands",
+          "bestTimeToVisit": "May-October",
+          "nearbyAttractions": ["Mount Otemanu", "Matira Beach", "Coral Gardens"],
+          "averageRating": 4.9,
+          "websiteUrl": "https://tahititourisme.com/en-us/islands/bora-bora/"
+        }
+      },
+      {
+        "name": "Petra",
+        "coordinates": [30.3285, 35.4444],
+        "description": "Ancient city carved into rose-colored rock faces, dating to around 300 B.C. Famous for its elaborate tomb facades and water conduit system.",
+        "image_queries": ["Petra Jordan", "Treasury Petra"],
+        "travelTips": "Arrive early to avoid crowds and heat. Consider the 'Petra by Night' experience to see the Treasury lit by candlelight.",
+        "metadata": {
+          "country": "Jordan",
+          "region": "Ma'an Governorate",
+          "bestTimeToVisit": "March-May, September-November",
+          "nearbyAttractions": ["Wadi Rum", "Dead Sea", "Little Petra"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://www.visitpetra.jo/"
+        }
+      },
+      {
+        "name": "Venice",
+        "coordinates": [45.4408, 12.3155],
+        "description": "Built on more than 100 small islands in a lagoon in the Adriatic Sea, Venice has no roads, just canals – including the Grand Canal – lined with Renaissance and Gothic palaces.",
+        "image_queries": ["Venice Italy canals", "Grand Canal Venice"],
+        "travelTips": "Explore the less touristy neighborhoods like Cannaregio and Dorsoduro. Consider a vaporetto pass for unlimited water bus travel.",
+        "metadata": {
+          "country": "Italy",
+          "region": "Veneto",
+          "bestTimeToVisit": "April-May, September-October",
+          "nearbyAttractions": ["Murano", "Burano", "Lido"],
+          "averageRating": 4.7,
+          "websiteUrl": "https://www.veneziaunica.it/en"
+        }
+      },
+      {
+        "name": "Angkor Wat",
+        "coordinates": [13.4125, 103.8670],
+        "description": "Enormous Buddhist temple complex in Cambodia, built in the first half of the 12th century. The largest religious monument in the world.",
+        "image_queries": ["Angkor Wat Cambodia", "Angkor temples sunrise"],
+        "travelTips": "Purchase a multi-day pass to explore at a relaxed pace. Hire a knowledgeable guide to understand the history and symbolism.",
+        "metadata": {
+          "country": "Cambodia",
+          "region": "Siem Reap Province",
+          "bestTimeToVisit": "November-March",
+          "nearbyAttractions": ["Ta Prohm", "Bayon Temple", "Banteay Srei"],
+          "averageRating": 4.8,
+          "websiteUrl": "https://www.angkorenterprise.gov.kh/"
+        }
+      },
+      {
+        "name": "Maasai Mara",
+        "coordinates": [-1.2921, 35.8250],
+        "description": "Large game reserve in Kenya famous for its exceptional population of big cats and the annual migration of zebra, wildebeest, and Thomson's gazelle from the Serengeti.",
+        "image_queries": ["Maasai Mara Kenya", "Maasai Mara safari"],
+        "travelTips": "Visit between July and October to witness the Great Migration. Stay in a conservancy for a more exclusive safari experience.",
+        "metadata": {
+          "country": "Kenya",
+          "region": "Narok County",
+          "bestTimeToVisit": "July-October (migration season)",
+          "nearbyAttractions": ["Lake Nakuru", "Lake Victoria", "Maasai Villages"],
+          "averageRating": 4.9,
+          "websiteUrl": "https://www.maasaimara.com/"
+        }
+      },
+      {
+        "name": "Rio de Janeiro",
+        "coordinates": [-22.9068, -43.1729],
+        "description": "Brazilian coastal city famous for its Copacabana beach, Christ the Redeemer statue, and vibrant carnival celebrations.",
+        "image_queries": ["Rio de Janeiro Christ the Redeemer", "Copacabana Beach"],
+        "travelTips": "Visit Christ the Redeemer early in the morning to avoid crowds. For Carnival, book accommodations months in advance.",
+        "metadata": {
+          "country": "Brazil",
+          "region": "Southeast Brazil",
+          "bestTimeToVisit": "December-March (summer) or June-September (winter)",
+          "nearbyAttractions": ["Sugarloaf Mountain", "Tijuca Forest", "Lapa Steps"],
+          "averageRating": 4.7,
+          "websiteUrl": "https://www.rio.rj.gov.br/web/riotur/english"
+        }
+      }
+    ]
+  }
+}
