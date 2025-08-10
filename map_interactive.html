@@ -270,10 +270,15 @@
       cursor: pointer;
       transition: all 0.2s ease;
       width: 100%;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
     }
     
     .action-button:hover {
       background: #0056b3;
+      color: white;
+      text-decoration: none;
     }
     
     .action-button.secondary {
@@ -284,6 +289,8 @@
     
     .action-button.secondary:hover {
       background: #e2f0ff;
+      color: #007bff;
+      text-decoration: none;
     }
     
     /* List styles */
@@ -536,6 +543,22 @@
 </head>
 <body>
   <script src="lib/swiper/swiper-bundle.min.js"></script>
+  
+  <!-- Header Bar -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <div style="font-size: 20px; font-weight: bold; color: #007bff; display: flex; align-items: center;">
+      <i class="fas fa-globe-europe" style="margin-right: 10px; font-size: 24px;"></i> Norway Explorer
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button onclick="map.setView([63.5, 10.5], 5)" style="background: #f0f7ff; border: 1px solid #cce4ff; color: #007bff; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+        <i class="fas fa-home"></i> Norway
+      </button>
+      <button style="background: #007bff; color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+        <i class="fas fa-star"></i> Explore
+      </button>
+    </div>
+  </div>
+  
   <div id="map">
     <!-- Loading indicator -->
     <div id="loading" style="position: absolute; z-index: 999; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.85); padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.2); text-align: center;">
@@ -569,10 +592,10 @@
     const northEast = L.latLng(85.05112878, 180);
     const bounds = L.latLngBounds(southWest, northEast);
     
-    // Get initial view based on device
+    // Get initial view based on device - centered on Norway
     const isMobile = window.innerWidth <= 768;
-    const initialZoom = isMobile ? 1.5 : 2;
-    const initialCenter = [20, 0]; // Centered on the world
+    const initialZoom = isMobile ? 4 : 5;
+    const initialCenter = [63.5, 10.5]; // Centered on Norway
     
     const map = L.map('map', {
       minZoom: isMobile ? 1.5 : 2,
@@ -628,80 +651,150 @@
     // Load JSON data of places
     async function loadPlaces() {
       try {
-        // Try to load the enhanced travel guide first
-        const res = await fetch('travel_destinations.json');
+        // Load the Norway places data
+        const res = await fetch('norway_places.json');
         const data = await res.json();
         
-        // If it's the enhanced version, convert it to the format our current code expects
-        if (data.categories && data.categories.destinations) {
-          console.log("Loading global travel guide data");
-          
-          // Convert the new format to the old format for backward compatibility
-          const convertedData = {
-            free_places: [],
-            premium_places: []
-          };
-          
-          data.categories.destinations.forEach(destination => {
-            const placeData = {
-              name: destination.name,
-              coordinates: destination.coordinates,
-              description: destination.description,
-              image_queries: destination.image_queries || [],
-              // Add the new data structure as extra metadata
-              metadata: destination
+        // Add Norwegian hiking trail examples to enhance the data
+        if (data.free_places && data.free_places.length > 0) {
+          // Add hiking trail info to Preikestolen as an example
+          const preikestolen = data.free_places.find(p => p.name === "Preikestolen");
+          if (preikestolen) {
+            preikestolen.hiking_trails = [
+              {
+                name: "Preikestolen Trail",
+                difficulty: "moderate",
+                length_km: 7.6,
+                estimated_time_hours: 4,
+                description: "Popular hiking route with stunning views. The trail is well-marked and includes some steep sections.",
+                maps_url: "https://www.google.com/maps/dir//Preikestolen,+4130+Forsand,+Norway",
+                safety_info: {
+                  required_equipment: ["Hiking boots", "Water bottle", "Weather-appropriate clothing"],
+                  difficulty_factors: "Steep sections, can be slippery when wet"
+                },
+                parking: [
+                  {
+                    name: "Preikestolen Mountain Lodge Parking",
+                    fee: "200 NOK per day",
+                    capacity: "300",
+                    reservation_required: false
+                  }
+                ]
+              }
+            ];
+            
+            // Add navigation info
+            preikestolen.navigation = {
+              googleMapsUrl: "https://www.google.com/maps/dir//Preikestolen,+4130+Forsand,+Norway"
             };
             
-            // All places are now treated as free
-            convertedData.free_places.push(placeData);
-          });
+            // Add practical info
+            preikestolen.practical_info = {
+              best_time_to_visit: ["May", "June", "July", "August", "September"],
+              weather: {
+                summer: "Mild with average temperatures between 15-20°C"
+              },
+              visitor_center: {
+                name: "Preikestolen Mountain Lodge",
+                opening_hours: "08:00-20:00 (Summer)"
+              },
+              emergency_contacts: {
+                police: "112"
+              }
+            };
+          }
           
-          return {
-            data: convertedData,
-            isEnhanced: true,
-            originalData: data
-          };
+          // Add navigation info to other locations
+          data.free_places.forEach(place => {
+            if (!place.navigation) {
+              place.navigation = {
+                googleMapsUrl: `https://www.google.com/maps/dir//${place.coordinates[0]},${place.coordinates[1]}`
+              };
+            }
+          });
+        }
+        
+        if (data.premium_places && data.premium_places.length > 0) {
+          // Add hiking trail info to Trolltunga as an example
+          const trolltunga = data.premium_places.find(p => p.name === "Trolltunga");
+          if (trolltunga) {
+            trolltunga.hiking_trails = [
+              {
+                name: "Trolltunga Trail",
+                difficulty: "hard",
+                length_km: 28,
+                estimated_time_hours: 10,
+                description: "Challenging hike to one of Norway's most spectacular photo spots. This is a demanding full-day hike.",
+                maps_url: "https://www.google.com/maps/dir//Trolltunga,+Odda,+Norway",
+                safety_info: {
+                  required_equipment: ["Hiking boots", "Plenty of water", "Food", "Map", "Extra clothes", "First aid kit"],
+                  difficulty_factors: "Long distance, significant elevation gain, exposed sections"
+                },
+                parking: [
+                  {
+                    name: "Trolltunga Main Parking P2",
+                    fee: "500 NOK per day",
+                    capacity: "220",
+                    reservation_required: true,
+                    reservation_url: "https://www.trolltunga-active.com/parking/"
+                  }
+                ]
+              }
+            ];
+            
+            // Add navigation info
+            trolltunga.navigation = {
+              googleMapsUrl: "https://www.google.com/maps/dir//Trolltunga,+Odda,+Norway"
+            };
+            
+            // Add practical info
+            trolltunga.practical_info = {
+              best_time_to_visit: ["June", "July", "August", "September"],
+              weather: {
+                summer: "Unpredictable mountain weather, prepare for all conditions"
+              },
+              visitor_center: {
+                name: "Trolltunga Active",
+                opening_hours: "07:00-19:00 (Summer season)"
+              },
+              emergency_contacts: {
+                police: "112",
+                medical: "113"
+              }
+            };
+          }
+          
+          // Add navigation info to other premium locations
+          data.premium_places.forEach(place => {
+            if (!place.navigation) {
+              place.navigation = {
+                googleMapsUrl: `https://www.google.com/maps/dir//${place.coordinates[0]},${place.coordinates[1]}`
+              };
+            }
+          });
         }
         
         return {
           data: data,
-          isEnhanced: false
+          isEnhanced: true
         };
       } catch (e) {
-        console.log("Enhanced travel guide not found, falling back to basic places data");
+        console.error("Error loading Norway places:", e);
         
-        // Create a fallback dataset with world locations
+        // Create a fallback dataset with Norway locations
         const fallbackData = {
           free_places: [
             {
-              name: "Eiffel Tower",
-              coordinates: [48.8584, 2.2945],
-              description: "Iconic wrought-iron lattice tower on the Champ de Mars in Paris, France.",
-              image_queries: ["Eiffel Tower Paris"]
+              name: "Geirangerfjord",
+              coordinates: [62.1048, 7.0941],
+              description: "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls.",
+              image_queries: ["Geirangerfjord Norway scenic"]
             },
             {
-              name: "Machu Picchu",
-              coordinates: [-13.1631, -72.5450],
-              description: "15th-century Inca citadel located in southern Peru on a mountain ridge.",
-              image_queries: ["Machu Picchu Peru"]
-            },
-            {
-              name: "Great Barrier Reef",
-              coordinates: [-18.2871, 147.6992],
-              description: "World's largest coral reef system off the coast of Queensland, Australia.",
-              image_queries: ["Great Barrier Reef Australia"]
-            },
-            {
-              name: "Mount Fuji",
-              coordinates: [35.3606, 138.7274],
-              description: "Japan's tallest peak and an active volcano that last erupted in 1707.",
-              image_queries: ["Mount Fuji Japan"]
-            },
-            {
-              name: "Grand Canyon",
-              coordinates: [36.0544, -112.2401],
-              description: "Steep-sided canyon carved by the Colorado River in Arizona, United States.",
-              image_queries: ["Grand Canyon Arizona"]
+              name: "Oslo Opera House",
+              coordinates: [59.9076, 10.7532],
+              description: "Modern architectural landmark and cultural hub in Oslo.",
+              image_queries: ["Oslo Opera House white marble"]
             }
           ],
           premium_places: []
@@ -800,7 +893,15 @@
         marker.on('popupopen', function(e) {
           if (imgUrls.length > 0) {
             const placeId = place.name.toLowerCase().replace(/\s+/g, '-');
-            // No need for additional event handlers since we removed the fullscreen gallery button
+            // Add event handlers to open images in fullscreen when clicked
+            setTimeout(() => {
+              const imgElements = document.querySelectorAll(`#gallery-${placeId} .popup-image`);
+              imgElements.forEach(img => {
+                img.addEventListener('click', function() {
+                  openFullscreenGallery(imgUrls, place.name);
+                });
+              });
+            }, 100);
           }
           
           // If this is an enhanced place, set up tab functionality
@@ -1043,87 +1144,6 @@
           ${trail.guided_only ? `
             <div style="margin-top: 10px;">
               <a href="${trail.guide_booking_url || '#'}" class="action-button secondary" title="Book a required guide for this trail" target="_blank">
-                <i class="fas fa-user-friends"></i> Book Required Guide
-              </a>
-            </div>
-          ` : ''}
-          
-          ${trail.parking && trail.parking.length > 0 ? `
-            <div style="margin-top: 15px;">
-              <div class="section-title">
-                <i class="fas fa-parking"></i> Parking
-              </div>
-              <ul class="feature-list">
-                ${trail.parking.map(p => `
-                  <li>
-                    <div class="list-item-content">
-                      <div class="list-item-title">${p.name}</div>
-                      <div class="list-item-subtitle">
-                        ${p.fee} · ${p.capacity} spaces
-                        ${p.reservation_required ? ' · Reservation required' : ''}
-                      </div>
-                    </div>
-                    ${p.reservation_url ? `
-                      <div class="list-item-action">
-                        <a href="${p.reservation_url}" class="action-button secondary" style="margin-top: 0; padding: 5px 10px;" title="Book parking" target="_blank">
-                          Book
-                        </a>
-                      </div>
-                    ` : ''}
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
-          ` : ''}
-          
-          ${trail.safety_info ? `
-            <div style="margin-top: 15px;">
-              <div class="section-title">
-                <i class="fas fa-exclamation-triangle"></i> Safety Information
-              </div>
-              <div class="info-card" style="background-color: #fff3cd; border-color: #ffeeba;">
-                <div class="info-card-content">
-                  <strong>Required equipment:</strong> ${trail.safety_info.required_equipment && Array.isArray(trail.safety_info.required_equipment) ? trail.safety_info.required_equipment.join(', ') : 'None'}<br>
-                  <strong>Difficulty factors:</strong> ${trail.safety_info.difficulty_factors || 'Standard trail difficulty'}
-                </div>
-              </div>
-            </div>
-          ` : ''}
-                
-                // Add start and end markers
-                L.marker(trailCoords[0], {
-                  icon: L.divIcon({
-                    className: 'custom-div-icon',
-                    html: "<div style='background-color:#4CAF50;width:12px;height:12px;border-radius:50%;border:2px solid white;'></div>",
-                    iconSize: [12, 12],
-                    iconAnchor: [6, 6]
-                  })
-                }).addTo(miniMap).bindTooltip("Start", {permanent: true, direction: 'right'});
-                
-                L.marker(trailCoords[trailCoords.length-1], {
-                  icon: L.divIcon({
-                    className: 'custom-div-icon',
-                    html: "<div style='background-color:#F44336;width:12px;height:12px;border-radius:50%;border:2px solid white;'></div>",
-                    iconSize: [12, 12],
-                    iconAnchor: [6, 6]
-                  })
-                }).addTo(miniMap).bindTooltip("End", {permanent: true, direction: 'right'});
-                
-                // Fit bounds to trail with padding
-                miniMap.fitBounds(trailLine.getBounds(), {
-                  padding: [20, 20]
-                });
-              }, 300);
-            </script>
-          ` : ''}
-          
-          <a href="${trail.maps_url}" class="action-button" title="Get directions to the trail" target="_blank">
-            <i class="fas fa-route"></i> Navigate to Trail
-          </a>
-          
-          ${trail.guided_only ? `
-            <div style="margin-top: 10px;">
-              <a href="${trail.guide_booking_url}" class="action-button secondary" title="Book a required guide for this trail" target="_blank">
                 <i class="fas fa-user-friends"></i> Book Required Guide
               </a>
             </div>
@@ -1414,20 +1434,20 @@
         // Store the original enhanced data for reference if available
         const enhancedData = placesResult.originalData;
 
-      // Add all places markers (both free and premium)
-      await addMarkers(placesData.free_places, markersCluster, false);
-      
-      // Add premium places markers too
-      if (placesData.premium_places && placesData.premium_places.length > 0) {
-        await addMarkers(placesData.premium_places, markersCluster, true);
-      }
-      
-      markersCluster.addTo(map);
-      
-      // Setup fullscreen gallery close button
-      document.getElementById('close-gallery').addEventListener('click', () => {
-        document.getElementById('fullscreen-gallery').style.display = 'none';
-      });
+        // Add all places markers (both free and premium)
+        await addMarkers(placesData.free_places, markersCluster, false);
+        
+        // Add premium places markers too
+        if (placesData.premium_places && placesData.premium_places.length > 0) {
+          await addMarkers(placesData.premium_places, markersCluster, true);
+        }
+        
+        markersCluster.addTo(map);
+        
+        // Setup fullscreen gallery close button
+        document.getElementById('close-gallery').addEventListener('click', () => {
+          document.getElementById('fullscreen-gallery').style.display = 'none';
+        });
       
       // Close gallery on escape key
       document.addEventListener('keydown', (e) => {
