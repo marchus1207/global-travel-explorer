@@ -595,7 +595,7 @@
 <body>
   <script src="lib/swiper/swiper-bundle.min.js"></script>
   
-  <!-- Collapsible Header Bar -->
+  <!-- Collapsible Header Bar - positioned fixed at the very top only -->
   <div id="header-bar" style="position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
     <div style="font-size: 20px; font-weight: bold; color: #007bff; display: flex; align-items: center;">
       <i class="fas fa-globe-americas" style="margin-right: 10px; font-size: 24px;"></i> Global Explorer
@@ -1776,7 +1776,7 @@
             zoom: 2,
             minZoom: 2,
             maxZoom: 18,
-            zoomControl: true,
+            zoomControl: false, // We'll add zoom control manually with better positioning
             fadeAnimation: true,
             zoomAnimation: true,
             worldCopyJump: true // Allows seamless horizontal scrolling
@@ -1788,6 +1788,11 @@
             subdomains: ['a', 'b', 'c'],
             minZoom: 2,
             maxZoom: 19
+          }).addTo(map);
+          
+          // Add zoom control in a better position (away from the header)
+          L.control.zoom({
+            position: 'bottomright'
           }).addTo(map);
         }
         
@@ -2155,6 +2160,24 @@
         if (map) map.invalidateSize();
       }, 300);
     }
+    
+    // Ensure the header doesn't follow scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      // Disable any scroll-related behavior for the header
+      const header = document.getElementById('header-bar');
+      if (header) {
+        // Keep the header always at the top
+        map.on('zoom', function() {
+          header.style.position = 'absolute';
+          header.style.top = '0';
+        });
+        
+        map.on('move', function() {
+          header.style.position = 'absolute';
+          header.style.top = '0';
+        });
+      }
+    });
     
     // Toggle fullscreen mode
     function toggleFullscreen() {
