@@ -1,0 +1,963 @@
+{
+  "version": "2.0",
+  "last_updated": "2025-08-10",
+  "categories": {
+    "destinations": [
+      {
+        "id": "geirangerfjord",
+        "name": "Geirangerfjord",
+        "type": "fjord",
+        "isPremium": false,
+        "coordinates": [62.1048, 7.0941],
+        "description": "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls. UNESCO World Heritage Site with dramatic mountain landscape.",
+        "image_queries": [
+          "Geirangerfjord Norway scenic",
+          "Seven Sisters Waterfall Geirangerfjord",
+          "Geirangerfjord village sunset",
+          "Geirangerfjord fjord cruise",
+          "Geirangerfjord mountains"
+        ],
+        "navigation": {
+          "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=Geirangerfjord,Norway",
+          "waze_url": "https://waze.com/ul?ll=62.1048,7.0941&navigate=yes",
+          "apple_maps_url": "http://maps.apple.com/?daddr=62.1048,7.0941"
+        },
+        "nearby_airports": [
+          {
+            "name": "Ålesund Airport, Vigra",
+            "code": "AES",
+            "distance_km": 110,
+            "coordinates": [62.5625, 6.1197],
+            "transport_options": [
+              {
+                "type": "bus",
+                "company": "Fjord1",
+                "schedule_url": "https://www.fjord1.no/eng",
+                "price_range": "200-350 NOK",
+                "duration": "2.5 hours"
+              },
+              {
+                "type": "taxi",
+                "price_range": "1500-2000 NOK",
+                "duration": "1.5 hours"
+              }
+            ]
+          },
+          {
+            "name": "Molde Airport, Årø",
+            "code": "MOL",
+            "distance_km": 85,
+            "coordinates": [62.7447, 7.2625],
+            "transport_options": [
+              {
+                "type": "shuttle",
+                "company": "Norway Shuttles",
+                "schedule_url": "https://www.norwayshuttles.com",
+                "price_range": "300-450 NOK",
+                "duration": "2 hours"
+              }
+            ]
+          }
+        ],
+        "accommodations": [
+          {
+            "name": "Hotel Union Geiranger",
+            "type": "hotel",
+            "stars": 4,
+            "coordinates": [62.1001, 7.0913],
+            "price_range": "1500-3000 NOK",
+            "booking_url": "https://www.hotelunion.no/en",
+            "description": "Historic hotel with spa facilities and stunning fjord views.",
+            "amenities": ["restaurant", "spa", "pool", "free-wifi", "parking"],
+            "distance_to_center_km": 0.5,
+            "image_query": "Hotel Union Geiranger Norway"
+          },
+          {
+            "name": "Grande Fjord Hotel",
+            "type": "hotel",
+            "stars": 3,
+            "coordinates": [62.1013, 7.0961],
+            "price_range": "1000-2000 NOK",
+            "booking_url": "https://www.grandefjordhotel.com",
+            "description": "Modern hotel with panoramic fjord views and comfortable rooms.",
+            "amenities": ["restaurant", "free-wifi", "parking"],
+            "distance_to_center_km": 0.8,
+            "image_query": "Grande Fjord Hotel Geiranger"
+          },
+          {
+            "name": "Geiranger Camping",
+            "type": "camping",
+            "coordinates": [62.1027, 7.0982],
+            "price_range": "200-500 NOK",
+            "booking_url": "https://www.geirangercamping.no",
+            "description": "Campsite with stunning views of the fjord, cabins and tent pitches available.",
+            "amenities": ["shower", "kitchen", "electricity", "wifi"],
+            "distance_to_center_km": 1.2,
+            "image_query": "Geiranger Camping Norway"
+          }
+        ],
+        "hiking_trails": [
+          {
+            "name": "Skageflå Farm Hike",
+            "difficulty": "moderate",
+            "length_km": 5.5,
+            "elevation_gain_m": 500,
+            "estimated_time_hours": 4,
+            "start_point": {
+              "name": "Geiranger Boat Terminal",
+              "coordinates": [62.1018, 7.0947]
+            },
+            "end_point": {
+              "name": "Skageflå Farm",
+              "coordinates": [62.1140, 7.0689]
+            },
+            "trail_coordinates": [
+              [62.1018, 7.0947],
+              [62.1032, 7.0912],
+              [62.1047, 7.0889],
+              [62.1061, 7.0861],
+              [62.1065, 7.0830],
+              [62.1082, 7.0798],
+              [62.1098, 7.0745],
+              [62.1117, 7.0712],
+              [62.1140, 7.0689]
+            ],
+            "description": "Beautiful hike to an abandoned farm with spectacular views of the Geirangerfjord and Seven Sisters waterfall. Start with a boat trip to Skagehola, then follow the marked trail up to the farm.",
+            "best_season": ["June", "July", "August", "September"],
+            "parking": [
+              {
+                "name": "Geiranger Village Parking",
+                "coordinates": [62.1016, 7.0950],
+                "fee": "50 NOK/hour",
+                "capacity": 100
+              }
+            ],
+            "image_query": "Skageflå Farm Hike Geiranger",
+            "maps_url": "https://www.google.com/maps/dir/Geiranger/Skagefl%C3%A5,+6216+Geiranger/@62.1079,7.0562,14z/data=!4m14!4m13!1m5!1m1!1s0x46169d427b268c51:0xb8c99540dcc397fe!2m2!1d7.0940816!2d62.1008441!1m5!1m1!1s0x46169dc2908273fb:0xdce8472586383092!2m2!1d7.0688978!2d62.1139936!3e2?entry=ttu"
+          },
+          {
+            "name": "Storseterfossen Waterfall",
+            "difficulty": "easy",
+            "length_km": 3,
+            "elevation_gain_m": 250,
+            "estimated_time_hours": 2,
+            "start_point": {
+              "name": "Westerås Farm",
+              "coordinates": [62.0972, 7.0846]
+            },
+            "end_point": {
+              "name": "Storseterfossen Waterfall",
+              "coordinates": [62.0921, 7.0752]
+            },
+            "trail_coordinates": [
+              [62.0972, 7.0846],
+              [62.0965, 7.0830],
+              [62.0958, 7.0812],
+              [62.0945, 7.0801],
+              [62.0933, 7.0789],
+              [62.0927, 7.0770],
+              [62.0921, 7.0752]
+            ],
+            "description": "Family-friendly hike to a waterfall you can walk behind. The path is well maintained with steps and railings in steeper sections.",
+            "best_season": ["May", "June", "July", "August", "September"],
+            "parking": [
+              {
+                "name": "Westerås Farm Parking",
+                "coordinates": [62.0972, 7.0846],
+                "fee": "30 NOK/day",
+                "capacity": 40
+              }
+            ],
+            "image_query": "Storseterfossen Waterfall Geiranger",
+            "maps_url": "https://www.google.com/maps/dir/Wester%C3%A5s+Gard,+Geiranger/Storseterfossen,+Geiranger/@62.0945,7.0752,16z/data=!4m14!4m13!1m5!1m1!1s0x46169d607491876f:0x2f88012383ef4ee1!2m2!1d7.0845837!2d62.0970703!1m5!1m1!1s0x46169d65a71e1a57:0xf7a71913831cf326!2m2!1d7.0751952!2d62.0920654!3e2?entry=ttu"
+          },
+          {
+            "name": "Løsta Viewpoint Hike",
+            "difficulty": "moderate",
+            "length_km": 4.2,
+            "elevation_gain_m": 320,
+            "estimated_time_hours": 3,
+            "start_point": {
+              "name": "Geiranger Church",
+              "coordinates": [62.0992, 7.0873]
+            },
+            "end_point": {
+              "name": "Løsta Viewpoint",
+              "coordinates": [62.0875, 7.0742]
+            },
+            "trail_coordinates": [
+              [62.0992, 7.0873],
+              [62.0975, 7.0865],
+              [62.0952, 7.0847],
+              [62.0935, 7.0827],
+              [62.0918, 7.0804],
+              [62.0901, 7.0778],
+              [62.0889, 7.0753],
+              [62.0875, 7.0742]
+            ],
+            "description": "A rewarding hike with panoramic views of the Geirangerfjord. The path climbs steadily through forest and meadows to a spectacular viewpoint.",
+            "best_season": ["May", "June", "July", "August", "September"],
+            "parking": [
+              {
+                "name": "Geiranger Church Parking",
+                "coordinates": [62.0990, 7.0871],
+                "fee": "30 NOK/hour",
+                "capacity": 30
+              }
+            ],
+            "image_query": "Løsta Viewpoint Geiranger",
+            "maps_url": "https://www.google.com/maps/dir/Geiranger+Church,+Geiranger/62.0875,7.0742/@62.0934,7.0742,15z/data=!4m9!4m8!1m5!1m1!1s0x46169d42429539c7:0x1ae3de3cb47a27eb!2m2!1d7.087285!2d62.099235!1m0!3e2?entry=ttu"
+          },
+          {
+            "name": "Ørnevegen (Eagle Road) Viewpoint",
+            "difficulty": "easy",
+            "length_km": 1.5,
+            "elevation_gain_m": 120,
+            "estimated_time_hours": 1,
+            "start_point": {
+              "name": "Eagle Road Parking",
+              "coordinates": [62.0895, 7.1232]
+            },
+            "end_point": {
+              "name": "Ørnesvingen Viewpoint",
+              "coordinates": [62.0912, 7.1286]
+            },
+            "trail_coordinates": [
+              [62.0895, 7.1232],
+              [62.0901, 7.1245],
+              [62.0908, 7.1265],
+              [62.0912, 7.1286]
+            ],
+            "description": "Short walk to one of Norway's most famous viewpoints, looking down the Geirangerfjord with its hairpin bends. Perfect for photography.",
+            "best_season": ["April", "May", "June", "July", "August", "September", "October"],
+            "parking": [
+              {
+                "name": "Ørnesvingen Parking",
+                "coordinates": [62.0895, 7.1232],
+                "fee": "50 NOK/day",
+                "capacity": 60
+              }
+            ],
+            "image_query": "Ornevegen Eagle Road Viewpoint Geiranger",
+            "maps_url": "https://www.google.com/maps/dir/%C3%98rnesvingen+Utsiktspunkt,+Fylkesveg+63,+Geiranger/62.0912,7.1286/@62.0903,7.1258,17z/data=!4m9!4m8!1m5!1m1!1s0x46169d57878efd65:0x97333ee5ca623b9d!2m2!1d7.123218!2d62.089501!1m0!3e2?entry=ttu"
+          },
+          {
+            "name": "Flydalsjuvet Viewpoint Trail",
+            "difficulty": "easy",
+            "length_km": 1.2,
+            "elevation_gain_m": 80,
+            "estimated_time_hours": 0.75,
+            "start_point": {
+              "name": "Flydalsjuvet Lower Parking",
+              "coordinates": [62.0876, 7.1133]
+            },
+            "end_point": {
+              "name": "Flydalsjuvet Main Viewpoint",
+              "coordinates": [62.0889, 7.1143]
+            },
+            "trail_coordinates": [
+              [62.0876, 7.1133],
+              [62.0880, 7.1135],
+              [62.0885, 7.1140],
+              [62.0889, 7.1143]
+            ],
+            "description": "Easy walk to the iconic postcard view of Geiranger. The viewpoint offers unobstructed views of the village and fjord below.",
+            "best_season": ["April", "May", "June", "July", "August", "September", "October"],
+            "parking": [
+              {
+                "name": "Flydalsjuvet Parking",
+                "coordinates": [62.0876, 7.1133],
+                "fee": "30 NOK/hour",
+                "capacity": 25
+              }
+            ],
+            "image_query": "Flydalsjuvet Viewpoint Geiranger",
+            "maps_url": "https://www.google.com/maps/dir/Flydalsjuvet,+Geiranger/62.0889,7.1143/@62.0882,7.1133,17z/data=!4m9!4m8!1m5!1m1!1s0x46169d54a813ec1b:0xd3b5a718d16a09f0!2m2!1d7.113288!2d62.087544!1m0!3e2?entry=ttu"
+          }
+        ],
+        "activities": [
+          {
+            "name": "Fjord Sightseeing Cruise",
+            "type": "boat tour",
+            "duration_minutes": 60,
+            "price_range": "400-600 NOK",
+            "booking_url": "https://www.visitnorway.com/places-to-go/fjord-norway/the-geirangerfjord/things-to-do/fjord-sightseeing-geirangerfjord/",
+            "description": "Experience the majestic Geirangerfjord from the water, seeing the famous Seven Sisters waterfall up close.",
+            "schedule": "Departs hourly from 10:00 to 16:00 (May-September)",
+            "meeting_point": {
+              "name": "Geiranger Pier",
+              "coordinates": [62.1012, 7.0931]
+            },
+            "image_query": "Geirangerfjord sightseeing cruise",
+            "operator": "Geiranger Fjordservice",
+            "phone": "+47 70 26 30 07"
+          },
+          {
+            "name": "Kayaking Tour",
+            "type": "water sport",
+            "duration_minutes": 180,
+            "price_range": "750-950 NOK",
+            "booking_url": "https://www.fjordnorway.com/en/things-to-do/kayaking-in-geirangerfjord-p1246453",
+            "description": "Guided kayaking tour of the fjord with professional guides. Paddle past waterfalls and get unique perspectives of the dramatic landscape.",
+            "schedule": "09:00 and 14:00 daily (June-August)",
+            "meeting_point": {
+              "name": "Kayak Geiranger Center",
+              "coordinates": [62.1007, 7.0924]
+            },
+            "image_query": "Kayaking Geirangerfjord Norway",
+            "operator": "Active Geiranger",
+            "phone": "+47 94 85 45 37"
+          },
+          {
+            "name": "Geiranger Skywalk - Dalsnibba",
+            "type": "viewpoint excursion",
+            "duration_minutes": 120,
+            "price_range": "200-300 NOK",
+            "booking_url": "https://www.visitnorway.com/places-to-go/fjord-norway/the-geirangerfjord/things-to-do/dalsnibba-skywalk/",
+            "description": "Visit Europe's highest fjord view from a road at 1500 meters above sea level. The viewpoint platform offers panoramic views of Geirangerfjord and surrounding mountains.",
+            "schedule": "Open 08:00-18:00 (Late May-October, weather permitting)",
+            "meeting_point": {
+              "name": "Geiranger Tourist Information",
+              "coordinates": [62.1011, 7.0937]
+            },
+            "image_query": "Dalsnibba Skywalk Geiranger",
+            "operator": "Geiranger Skywalk",
+            "phone": "+47 70 26 30 77",
+            "distance_from_center_km": 20
+          },
+          {
+            "name": "RIB Boat Adventure",
+            "type": "adventure tour",
+            "duration_minutes": 90,
+            "price_range": "650-850 NOK",
+            "booking_url": "https://www.fjordnorway.com/en/things-to-do/rib-boat-safari-in-geirangerfjord-p1348173",
+            "description": "Fast-paced adventure in a rigid inflatable boat (RIB). Get close to waterfalls and experience the fjord at high speed with professional guides.",
+            "schedule": "Multiple departures daily (May-September)",
+            "meeting_point": {
+              "name": "Geiranger Pier",
+              "coordinates": [62.1012, 7.0931]
+            },
+            "image_query": "RIB boat Geirangerfjord",
+            "operator": "Geiranger Adventure",
+            "phone": "+47 70 26 30 99",
+            "minimum_age": 8
+          },
+          {
+            "name": "Fjord Farm Visit - Herdal Mountain Farm",
+            "type": "cultural experience",
+            "duration_minutes": 180,
+            "price_range": "350-550 NOK",
+            "booking_url": "https://www.fjordtours.com/things-to-do/herdal-mountain-farm/",
+            "description": "Visit a traditional mountain summer farm producing goat cheese using methods from the 1800s. Meet the animals and taste local foods in an authentic setting.",
+            "schedule": "11:00-16:00 (June 15-September 5)",
+            "meeting_point": {
+              "name": "Herdal Mountain Farm",
+              "coordinates": [62.0563, 7.2145]
+            },
+            "image_query": "Herdal Mountain Farm Geiranger",
+            "operator": "Herdal Mountain Farm",
+            "phone": "+47 90 79 89 52",
+            "distance_from_center_km": 18
+          },
+          {
+            "name": "Helicopter Sightseeing",
+            "type": "aerial tour",
+            "duration_minutes": 30,
+            "price_range": "2500-3500 NOK",
+            "booking_url": "https://www.fjordnorway.com/en/things-to-do/helicopter-tour-over-geirangerfjord-p1987213",
+            "description": "Experience the UNESCO-protected Geirangerfjord from above with breathtaking aerial views of waterfalls, mountains, and the serpentine fjord.",
+            "schedule": "Weather dependent, pre-booking required",
+            "meeting_point": {
+              "name": "Geiranger Heliport",
+              "coordinates": [62.1025, 7.0980]
+            },
+            "image_query": "Helicopter tour Geirangerfjord",
+            "operator": "Fjord Helicopter Tours",
+            "phone": "+47 95 87 65 43",
+            "min_participants": 2,
+            "max_participants": 5
+          }
+        ],
+        "dining": [
+          {
+            "name": "Restaurant Utsikten",
+            "type": "restaurant",
+            "cuisine": ["Norwegian", "Seafood"],
+            "price_level": "high",
+            "coordinates": [62.1001, 7.0913],
+            "description": "Fine dining restaurant with panoramic views of the fjord.",
+            "opening_hours": "17:00-22:00",
+            "reservation_url": "https://www.hotelunion.no/en/dining",
+            "image_query": "Restaurant Utsikten Geiranger Norway"
+          },
+          {
+            "name": "Brasserie Posten",
+            "type": "restaurant",
+            "cuisine": ["Norwegian", "International"],
+            "price_level": "medium",
+            "coordinates": [62.1011, 7.0937],
+            "description": "Casual dining in a historic post office building.",
+            "opening_hours": "12:00-21:00",
+            "reservation_url": "https://www.brasserieposten.no",
+            "image_query": "Brasserie Posten Geiranger"
+          }
+        ],
+        "transportation": {
+          "car_rentals": [
+            {
+              "name": "Avis Ålesund Airport",
+              "coordinates": [62.5625, 6.1197],
+              "distance_km": 110,
+              "booking_url": "https://www.avis.no",
+              "price_range": "500-1000 NOK/day"
+            },
+            {
+              "name": "Hertz Ålesund",
+              "coordinates": [62.4723, 6.1549],
+              "distance_km": 98,
+              "booking_url": "https://www.hertz.no",
+              "price_range": "450-950 NOK/day"
+            }
+          ],
+          "public_transport": [
+            {
+              "type": "ferry",
+              "route": "Hellesylt - Geiranger",
+              "schedule_url": "https://www.fjord1.no/eng",
+              "price_range": "150-300 NOK",
+              "duration_minutes": 60,
+              "description": "Scenic ferry ride through the fjord."
+            },
+            {
+              "type": "bus",
+              "route": "Ålesund - Geiranger",
+              "company": "Nor-Way Bussekspress",
+              "schedule_url": "https://www.nor-way.no",
+              "price_range": "250-350 NOK",
+              "duration_minutes": 150
+            }
+          ]
+        },
+        "practical_info": {
+          "best_time_to_visit": ["May", "June", "July", "August", "September"],
+          "weather": {
+            "summer": "10-22°C, can be rainy",
+            "winter": "-10-5°C, snow in higher elevations",
+            "weather_url": "https://www.yr.no/en/forecast/daily-table/2-3153547/Norway/Møre%20og%20Romsdal/Stranda/Geiranger"
+          },
+          "emergency_contacts": {
+            "police": "112",
+            "medical": "113",
+            "rescue": "110"
+          },
+          "visitor_center": {
+            "name": "Geiranger Tourist Information",
+            "coordinates": [62.1011, 7.0937],
+            "opening_hours": "09:00-17:00 (May-September)",
+            "website": "https://www.visitgeiranger.no"
+          }
+        }
+      },
+      {
+        "id": "trolltunga",
+        "name": "Trolltunga",
+        "type": "hiking",
+        "isPremium": true,
+        "coordinates": [60.1249, 6.7406],
+        "description": "A dramatic rock formation jutting out 700 meters above Lake Ringedalsvatnet. One of Norway's most spectacular hikes.",
+        "image_queries": [
+          "Trolltunga rock formation Norway",
+          "Trolltunga cliff edge",
+          "Trolltunga people hiking",
+          "Trolltunga panoramic view",
+          "Trolltunga lake view sunrise"
+        ],
+        "navigation": {
+          "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=Trolltunga,Norway",
+          "waze_url": "https://waze.com/ul?ll=60.1249,6.7406&navigate=yes",
+          "apple_maps_url": "http://maps.apple.com/?daddr=60.1249,6.7406"
+        },
+        "nearby_airports": [
+          {
+            "name": "Bergen Airport, Flesland",
+            "code": "BGO",
+            "distance_km": 170,
+            "coordinates": [60.2934, 5.2180],
+            "transport_options": [
+              {
+                "type": "bus",
+                "company": "Skyss",
+                "schedule_url": "https://www.skyss.no/en/",
+                "price_range": "300-450 NOK",
+                "duration": "3.5 hours"
+              },
+              {
+                "type": "rental car",
+                "price_range": "500-1000 NOK/day",
+                "duration": "3 hours"
+              }
+            ]
+          },
+          {
+            "name": "Haugesund Airport",
+            "code": "HAU",
+            "distance_km": 135,
+            "coordinates": [59.3456, 5.2082],
+            "transport_options": [
+              {
+                "type": "bus",
+                "company": "Kystbussen",
+                "schedule_url": "https://www.kystbussen.no",
+                "price_range": "250-350 NOK",
+                "duration": "3 hours"
+              }
+            ]
+          }
+        ],
+        "hiking_trails": [
+          {
+            "name": "Trolltunga Classic Route",
+            "difficulty": "hard",
+            "length_km": 28,
+            "elevation_gain_m": 800,
+            "estimated_time_hours": 10,
+            "start_point": {
+              "name": "P2 Skjeggedal",
+              "coordinates": [60.1311, 6.7433]
+            },
+            "end_point": {
+              "name": "Trolltunga",
+              "coordinates": [60.1249, 6.7406]
+            },
+            "trail_coordinates": [
+              [60.1311, 6.7433],
+              [60.1305, 6.7442],
+              [60.1298, 6.7451],
+              [60.1294, 6.7455],
+              [60.1288, 6.7458],
+              [60.1282, 6.7456],
+              [60.1275, 6.7453],
+              [60.1271, 6.7450],
+              [60.1265, 6.7443],
+              [60.1261, 6.7435],
+              [60.1258, 6.7429],
+              [60.1254, 6.7422],
+              [60.1251, 6.7415],
+              [60.1249, 6.7406]
+            ],
+            "description": "The classic and most popular route to Trolltunga. A challenging day hike with stunning views of Lake Ringedalsvatnet throughout. The trail is well-marked with red T markers.",
+            "best_season": ["June 15", "July", "August", "September 15"],
+            "parking": [
+              {
+                "name": "P2 Skjeggedal",
+                "coordinates": [60.1311, 6.7433],
+                "fee": "500 NOK/day",
+                "capacity": 220,
+                "reservation_required": true,
+                "reservation_url": "https://trolltunga-active.com/parking/"
+              },
+              {
+                "name": "P1 Tyssedal",
+                "coordinates": [60.1269, 6.5629],
+                "fee": "300 NOK/day",
+                "capacity": 100,
+                "shuttle_to_trailhead": {
+                  "price": "100 NOK",
+                  "schedule": "Every 30 minutes from 6:00-10:00"
+                }
+              }
+            ],
+            "image_query": "Trolltunga hiking trail Norway",
+            "maps_url": "https://www.google.com/maps/dir/Trolltunga+P2+Parking,+Skjeggedal,+Odda/Trolltunga,+Odda/@60.1279,6.7182,14z/data=!4m14!4m13!1m5!1m1!1s0x463e997b06cddbff:0x9b7c92c9253cbbf4!2m2!1d6.743275!2d60.131069!1m5!1m1!1s0x463e99d6bedc31cf:0x847380fcf305c335!2m2!1d6.7405781!2d60.1248817!3e2?entry=ttu",
+            "safety_info": {
+              "required_equipment": ["hiking boots", "warm clothing", "rain gear", "food", "water", "map"],
+              "difficulty_factors": "Long distance, high elevation, exposed terrain, potential for rapidly changing weather",
+              "emergency_shelters": [
+                {
+                  "name": "Emergency Shelter 1",
+                  "coordinates": [60.1271, 6.7450],
+                  "facilities": ["basic shelter", "emergency phone"]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Trolltunga via Mågelitopp",
+            "difficulty": "expert",
+            "length_km": 20,
+            "elevation_gain_m": 1200,
+            "estimated_time_hours": 9,
+            "start_point": {
+              "name": "P3 Mågelitopp",
+              "coordinates": [60.1366, 6.7308]
+            },
+            "end_point": {
+              "name": "Trolltunga",
+              "coordinates": [60.1249, 6.7406]
+            },
+            "trail_coordinates": [
+              [60.1366, 6.7308],
+              [60.1358, 6.7315],
+              [60.1349, 6.7323],
+              [60.1340, 6.7332],
+              [60.1330, 6.7341],
+              [60.1320, 6.7350],
+              [60.1310, 6.7360],
+              [60.1300, 6.7370],
+              [60.1285, 6.7380],
+              [60.1275, 6.7390],
+              [60.1265, 6.7398],
+              [60.1257, 6.7402],
+              [60.1249, 6.7406]
+            ],
+            "description": "Steeper alternative route with fewer hikers but more challenging terrain. This route starts higher up, saving some elevation gain but requiring more technical hiking skills.",
+            "best_season": ["July", "August"],
+            "parking": [
+              {
+                "name": "P3 Mågelitopp",
+                "coordinates": [60.1366, 6.7308],
+                "fee": "600 NOK/day",
+                "capacity": 80,
+                "reservation_required": true,
+                "reservation_url": "https://trolltunga-active.com/parking/"
+              }
+            ],
+            "image_query": "Trolltunga via Mågelitopp trail",
+            "maps_url": "https://www.google.com/maps/dir/P3+M%C3%A5gelitopp+Parking/Trolltunga,+Odda/@60.1308,6.7161,14z/data=!4m14!4m13!1m5!1m1!1s0x463e9988918cee71:0xb4c21a47525efbd!2m2!1d6.7308!2d60.1366!1m5!1m1!1s0x463e99d6bedc31cf:0x847380fcf305c335!2m2!1d6.7405781!2d60.1248817!3e2?entry=ttu"
+          },
+          {
+            "name": "Trolltunga via Ferrata Route",
+            "difficulty": "expert",
+            "length_km": 14,
+            "elevation_gain_m": 850,
+            "estimated_time_hours": 8,
+            "start_point": {
+              "name": "Skjeggedal Via Ferrata Start",
+              "coordinates": [60.1314, 6.7435]
+            },
+            "end_point": {
+              "name": "Trolltunga",
+              "coordinates": [60.1249, 6.7406]
+            },
+            "trail_coordinates": [
+              [60.1314, 6.7435],
+              [60.1310, 6.7440],
+              [60.1305, 6.7445],
+              [60.1300, 6.7452],
+              [60.1295, 6.7457],
+              [60.1290, 6.7462],
+              [60.1285, 6.7466],
+              [60.1280, 6.7470],
+              [60.1275, 6.7465],
+              [60.1270, 6.7450],
+              [60.1265, 6.7440],
+              [60.1258, 6.7425],
+              [60.1249, 6.7406]
+            ],
+            "description": "Guided Via Ferrata climbing route to Trolltunga. Includes steel cables, ladders and climbing equipment. Only available with certified guides. Offers thrilling climbing experience and smaller crowds.",
+            "best_season": ["June 20", "July", "August", "September 5"],
+            "parking": [
+              {
+                "name": "P2 Skjeggedal",
+                "coordinates": [60.1311, 6.7433],
+                "fee": "500 NOK/day",
+                "capacity": 220,
+                "reservation_required": true,
+                "reservation_url": "https://trolltunga-active.com/parking/"
+              }
+            ],
+            "image_query": "Trolltunga Via Ferrata climbing",
+            "maps_url": "https://www.google.com/maps/dir/Trolltunga+P2+Parking,+Skjeggedal,+Odda/Trolltunga,+Odda/@60.1279,6.7315,15z/data=!4m14!4m13!1m5!1m1!1s0x463e997b06cddbff:0x9b7c92c9253cbbf4!2m2!1d6.743275!2d60.131069!1m5!1m1!1s0x463e99d6bedc31cf:0x847380fcf305c335!2m2!1d6.7405781!2d60.1248817!3e2?entry=ttu",
+            "guided_only": true,
+            "guide_booking_url": "https://trolltunga-adventures.com/via-ferrata/"
+          },
+          {
+            "name": "Trolltunga Winter Route",
+            "difficulty": "extreme",
+            "length_km": 30,
+            "elevation_gain_m": 900,
+            "estimated_time_hours": 12,
+            "start_point": {
+              "name": "P2 Skjeggedal",
+              "coordinates": [60.1311, 6.7433]
+            },
+            "end_point": {
+              "name": "Trolltunga Winter Approach",
+              "coordinates": [60.1252, 6.7410]
+            },
+            "trail_coordinates": [
+              [60.1311, 6.7433],
+              [60.1305, 6.7440],
+              [60.1300, 6.7450],
+              [60.1290, 6.7460],
+              [60.1285, 6.7465],
+              [60.1280, 6.7470],
+              [60.1275, 6.7475],
+              [60.1270, 6.7470],
+              [60.1265, 6.7460],
+              [60.1260, 6.7440],
+              [60.1255, 6.7425],
+              [60.1252, 6.7410]
+            ],
+            "description": "Winter route to Trolltunga requiring serious mountaineering experience. Only recommended with certified guides from November to May. Includes ski/snowshoe travel and potential snow camping. Magnificent winter landscape views.",
+            "best_season": ["March", "April"],
+            "parking": [
+              {
+                "name": "P2 Skjeggedal Winter",
+                "coordinates": [60.1311, 6.7433],
+                "fee": "300 NOK/day",
+                "capacity": 50,
+                "limited_winter_access": true
+              }
+            ],
+            "image_query": "Trolltunga winter expedition snow",
+            "maps_url": "https://www.google.com/maps/dir/Trolltunga+P2+Parking,+Skjeggedal,+Odda/Trolltunga,+Odda/@60.1279,6.7315,15z/data=!4m14!4m13!1m5!1m1!1s0x463e997b06cddbff:0x9b7c92c9253cbbf4!2m2!1d6.743275!2d60.131069!1m5!1m1!1s0x463e99d6bedc31cf:0x847380fcf305c335!2m2!1d6.7405781!2d60.1248817!3e2?entry=ttu",
+            "guided_only": true,
+            "guide_booking_url": "https://trolltunga-adventures.com/winter-expedition/",
+            "safety_info": {
+              "required_equipment": ["mountaineering boots", "crampons", "ice axe", "avalanche gear", "winter tent", "sleeping bag rated -20°C", "winter clothing layers", "navigation equipment", "emergency communication device"],
+              "difficulty_factors": "Extreme weather, avalanche risk, limited daylight, snow and ice conditions, remote location with limited rescue access",
+              "emergency_shelters": [
+                {
+                  "name": "Emergency Winter Shelter",
+                  "coordinates": [60.1271, 6.7450],
+                  "facilities": ["basic shelter", "emergency supplies"]
+                }
+              ]
+            }
+          }
+        ],
+        "accommodations": [
+          {
+            "name": "Trolltunga Hotel",
+            "type": "hotel",
+            "stars": 3,
+            "coordinates": [60.1276, 6.6491],
+            "price_range": "1200-2000 NOK",
+            "booking_url": "https://www.trolltungahotel.com",
+            "description": "Comfortable hotel located near the trailhead with hiking-friendly amenities.",
+            "amenities": ["restaurant", "packed lunch service", "hiking information", "free-wifi", "parking"],
+            "distance_to_trailhead_km": 8.5,
+            "image_query": "Trolltunga Hotel Norway"
+          },
+          {
+            "name": "Odda Camping",
+            "type": "camping",
+            "coordinates": [60.0713, 6.5463],
+            "price_range": "150-450 NOK",
+            "booking_url": "https://www.oddacamping.no",
+            "description": "Campsite with cabins and tent pitches, popular with hikers.",
+            "amenities": ["shower", "kitchen", "laundry", "wifi"],
+            "distance_to_trailhead_km": 17,
+            "image_query": "Odda Camping Norway"
+          },
+          {
+            "name": "Trolltunga Studios",
+            "type": "apartment",
+            "coordinates": [60.0723, 6.5470],
+            "price_range": "900-1500 NOK",
+            "booking_url": "https://www.trolltungastudios.com",
+            "description": "Self-catering apartments ideal for hikers planning to visit Trolltunga.",
+            "amenities": ["kitchen", "free-wifi", "parking", "luggage storage"],
+            "distance_to_trailhead_km": 16.8,
+            "image_query": "Trolltunga Studios Odda"
+          }
+        ],
+        "activities": [
+          {
+            "name": "Guided Trolltunga Hike",
+            "type": "guided tour",
+            "duration_minutes": 600,
+            "price_range": "1200-1500 NOK",
+            "booking_url": "https://trolltunga-active.com/guided-hike-trolltunga/",
+            "description": "Professional guided hike to Trolltunga with experienced local guides. Includes safety equipment and local knowledge about geology, history, and nature.",
+            "schedule": "Daily departures at 08:00 (June-September)",
+            "meeting_point": {
+              "name": "Trolltunga Active Office",
+              "coordinates": [60.0723, 6.5460]
+            },
+            "image_query": "Guided hike Trolltunga Norway",
+            "operator": "Trolltunga Active",
+            "phone": "+47 948 48 404",
+            "includes": ["Professional guide", "Safety equipment", "Hiking poles if needed"]
+          },
+          {
+            "name": "Trolltunga Sunrise/Sunset Tour",
+            "type": "adventure",
+            "duration_minutes": 1440,
+            "price_range": "2000-2500 NOK",
+            "booking_url": "https://trolltunga-adventures.com/adventures/trolltunga-sunset-sunrise-hike/",
+            "description": "Overnight expedition to experience Trolltunga at sunrise or sunset, including camping. Experience the rock formation in magical light conditions with fewer tourists.",
+            "schedule": "Departures at 14:00 (June-August)",
+            "meeting_point": {
+              "name": "Skjeggedal Parking",
+              "coordinates": [60.1311, 6.7433]
+            },
+            "image_query": "Trolltunga sunset tour",
+            "operator": "Trolltunga Adventures",
+            "phone": "+47 917 76 085",
+            "includes": ["Professional guide", "Camping equipment", "Meals"]
+          },
+          {
+            "name": "Trolltunga Via Ferrata Climb",
+            "type": "climbing adventure",
+            "duration_minutes": 600,
+            "price_range": "1800-2200 NOK",
+            "booking_url": "https://trolltunga-active.com/via-ferrata-trolltunga/",
+            "description": "Experience Trolltunga from a different perspective with this guided climbing route. Using steel cables, ladders and climbing equipment, you'll access Trolltunga via a thrilling alternative route.",
+            "schedule": "Daily departures at 07:30 (June 20-September 10)",
+            "meeting_point": {
+              "name": "Skjeggedal Parking",
+              "coordinates": [60.1311, 6.7433]
+            },
+            "image_query": "Trolltunga Via Ferrata",
+            "operator": "Trolltunga Active",
+            "phone": "+47 948 48 404",
+            "includes": ["Professional guide", "Climbing equipment", "Safety gear"],
+            "min_age": 16,
+            "fitness_required": "High"
+          },
+          {
+            "name": "Helicopter Tour Over Trolltunga",
+            "type": "aerial tour",
+            "duration_minutes": 30,
+            "price_range": "2800-3500 NOK",
+            "booking_url": "https://fjordhelikopter.no/trolltunga",
+            "description": "See Trolltunga and the surrounding landscape from above with this spectacular helicopter tour. Perfect for photography and those who want to experience the majesty of the formation without the hike.",
+            "schedule": "Weather dependent, booking required",
+            "meeting_point": {
+              "name": "Odda Heliport",
+              "coordinates": [60.0700, 6.5400]
+            },
+            "image_query": "Helicopter over Trolltunga",
+            "operator": "Fjord Helicopter",
+            "phone": "+47 907 54 321",
+            "min_participants": 2,
+            "max_participants": 5
+          },
+          {
+            "name": "Trolltunga Photography Workshop",
+            "type": "photography tour",
+            "duration_minutes": 720,
+            "price_range": "1500-1900 NOK",
+            "booking_url": "https://trolltungaadventures.com/photography",
+            "description": "Guided hike with professional photographer focusing on capturing the best photos at Trolltunga. Learn composition techniques for landscape photography and get the perfect shot.",
+            "schedule": "Departures at 07:00 (June-September)",
+            "meeting_point": {
+              "name": "Skjeggedal Parking",
+              "coordinates": [60.1311, 6.7433]
+            },
+            "image_query": "Photography at Trolltunga",
+            "operator": "Trolltunga Photography",
+            "phone": "+47 916 45 278",
+            "includes": ["Photography instruction", "Guide", "Photo editing tips"]
+          },
+          {
+            "name": "Trolltunga & Fjord Combo Tour",
+            "type": "multi-day adventure",
+            "duration_minutes": 2880,
+            "price_range": "3500-4500 NOK",
+            "booking_url": "https://fjordtours.com/tours/trolltunga-active-fjord-package",
+            "description": "Complete Norway experience combining the Trolltunga hike with a fjord cruise on Hardangerfjord. Two-day package with accommodation in Odda.",
+            "schedule": "Starts daily (June-September)",
+            "meeting_point": {
+              "name": "Trolltunga Hotel",
+              "coordinates": [60.1276, 6.6491]
+            },
+            "image_query": "Trolltunga fjord combo",
+            "operator": "Fjord Tours",
+            "phone": "+47 815 68 222",
+            "includes": ["Guided hike", "Fjord cruise", "Hotel accommodation", "Meals"]
+          }
+        ],
+        "dining": [
+          {
+            "name": "Trolltunga Trail Café",
+            "type": "café",
+            "cuisine": ["Norwegian", "Hiking Food"],
+            "price_level": "medium",
+            "coordinates": [60.1311, 6.7430],
+            "description": "Café at the trailhead serving breakfast and packed lunches for hikers.",
+            "opening_hours": "06:00-11:00 (hiking season)",
+            "image_query": "Trolltunga Trail Café"
+          },
+          {
+            "name": "Restaurant Smeltehuset",
+            "type": "restaurant",
+            "cuisine": ["Norwegian", "International"],
+            "price_level": "high",
+            "coordinates": [60.0723, 6.5465],
+            "description": "Quality dining in Odda, perfect for post-hike celebration meals.",
+            "opening_hours": "17:00-22:00",
+            "reservation_url": "https://www.smeltehuset.no",
+            "image_query": "Restaurant Smeltehuset Odda Norway"
+          }
+        ],
+        "transportation": {
+          "car_rentals": [
+            {
+              "name": "Hertz Bergen Airport",
+              "coordinates": [60.2934, 5.2180],
+              "distance_km": 170,
+              "booking_url": "https://www.hertz.no",
+              "price_range": "500-1000 NOK/day"
+            },
+            {
+              "name": "Avis Odda",
+              "coordinates": [60.0701, 6.5443],
+              "distance_km": 17,
+              "booking_url": "https://www.avis.no",
+              "price_range": "600-1100 NOK/day"
+            }
+          ],
+          "public_transport": [
+            {
+              "type": "bus",
+              "route": "Bergen - Odda",
+              "company": "Skyss",
+              "schedule_url": "https://www.skyss.no/en/",
+              "price_range": "250-350 NOK",
+              "duration_minutes": 180
+            },
+            {
+              "type": "shuttle",
+              "route": "Odda - Skjeggedal (Trolltunga Trailhead)",
+              "company": "Trolltunga Shuttle",
+              "schedule_url": "https://www.trolltungashuttle.com",
+              "price_range": "120-180 NOK",
+              "duration_minutes": 30
+            }
+          ]
+        },
+        "practical_info": {
+          "best_time_to_visit": ["June 15", "July", "August", "September 15"],
+          "weather": {
+            "summer": "8-20°C, rapidly changing mountain weather",
+            "weather_url": "https://www.yr.no/en/forecast/daily-table/2-3153347/Norway/Vestland/Ullensvang/Trolltunga"
+          },
+          "hiking_permits": {
+            "required": false,
+            "notes": "No permit required, but parking reservation is highly recommended during peak season."
+          },
+          "emergency_contacts": {
+            "police": "112",
+            "mountain_rescue": "113",
+            "local_emergency": "+47 53 65 40 00"
+          },
+          "visitor_center": {
+            "name": "Trolltunga Tourist Information",
+            "coordinates": [60.0723, 6.5460],
+            "opening_hours": "08:00-18:00 (May-September)",
+            "website": "https://www.trolltunga.com/info"
+          }
+        }
+      }
+    ]
+  },
+  "app_settings": {
+    "default_language": "en",
+    "available_languages": ["en", "no", "de", "fr", "es"],
+    "map_default_center": [62.5, 7.5],
+    "map_default_zoom": 6
+  }
+}

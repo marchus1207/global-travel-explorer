@@ -1,0 +1,90 @@
+{
+  "free_places": [
+    {
+      "name": "Geirangerfjord",
+      "coordinates": [62.1048, 7.0941],
+      "description": "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls.",
+      "image_queries": [
+        "Geirangerfjord Norway scenic",
+        "Seven Sisters Waterfall Geirangerfjord",
+        "Geirangerfjord village sunset",
+        "Geirangerfjord fjord cruise",
+        "Geirangerfjord mountains"
+      ]
+    },
+    {
+      "name": "Oslo Opera House",
+      "coordinates": [59.9076, 10.7532],
+      "description": "Modern architectural landmark and cultural hub in Oslo.",
+      "image_queries": [
+        "Oslo Opera House white marble",
+        "Oslo Opera House sunset",
+        "Oslo Opera House rooftop view",
+        "Oslo Opera House interior hall",
+        "Oslo Opera House waterfront"
+      ]
+    },
+    {
+      "name": "Preikestolen",
+      "coordinates": [58.9861, 6.1903],
+      "description": "Also known as Pulpit Rock, a steep cliff rising 604 meters above Lysefjorden.",
+      "image_queries": [
+        "Preikestolen cliff Norway",
+        "Pulpit Rock view Norway",
+        "Preikestolen hiking trail",
+        "Lysefjorden from Preikestolen",
+        "Preikestolen overlook sunset"
+      ]
+    }
+  ],
+  "premium_places": [
+    {
+      "name": "Trolltunga",
+      "coordinates": [60.1249, 6.7406],
+      "description": "A dramatic cliff jutting out 700 meters above Lake Ringedalsvatnet.",
+      "image_queries": [
+        "Trolltunga rock formation Norway",
+        "Trolltunga cliff edge",
+        "Trolltunga people hiking",
+        "Trolltunga panoramic view",
+        "Trolltunga lake view sunrise"
+      ]
+    },
+    {
+      "name": "Lofoten Islands",
+      "coordinates": [68.0685, 13.5804],
+      "description": "A stunning archipelago known for dramatic peaks, fishing villages, and northern lights.",
+      "image_queries": [
+        "Reine Lofoten red cabins",
+        "Lofoten fishing village sunset",
+        "Lofoten northern lights",
+        "Lofoten mountain peaks",
+        "Lofoten beaches arctic"
+      ]
+    },
+    {
+      "name": "Atlantic Ocean Road",
+      "coordinates": [63.0170, 7.3543],
+      "description": "A scenic 8.3 km road connecting islands with daring bridges and spectacular views.",
+      "image_queries": [
+        "Atlantic Ocean Road Norway",
+        "Storseisundet Bridge Norway",
+        "Atlantic Ocean Road sunset",
+        "Atlantic Ocean Road aerial view",
+        "Atlantic Ocean Road stormy weather"
+      ]
+    },
+    {
+      "name": "Bergen",
+      "coordinates": [60.3913, 5.3221],
+      "description": "Norway's second-largest city with colorful wooden houses along the historic Bryggen wharf.",
+      "image_queries": [
+        "Bergen Bryggen colorful houses",
+        "Bergen harbor view",
+        "Bergen fish market",
+        "Bergen from Mount Fløyen",
+        "Bergen Hanseatic Quarter"
+      ]
+    }
+  ]
+}
