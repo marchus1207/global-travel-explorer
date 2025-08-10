@@ -3,14 +3,14 @@
 <head>
   <link 
     rel="stylesheet" 
-    href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.css" 
-    integrity="sha512-xdX4bmDgZzmQe1jJGpkWxAxmYl2L8+8YZylV5OUJurgN/lJwlL5sQKQqJX0jOJpzGcxD48yPJIxQbSqcKK6ALA==" 
+    href="https://unpkg.com/swiper@11.1.1/swiper-bundle.min.css" 
     crossorigin="anonymous" 
-    referrerpolicy="no-referrer" 
   />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Global Interactive Travel Map</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -20,13 +20,11 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    integrity="sha256-+bdWuWOXMFkX0v9Cvr3OWClPiYefDQz9GGZP/7xZxdc="
     crossorigin="anonymous"
   />
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-    integrity="sha256-LGDoWz9ADXvIOqcAdLDmCtZaZYGrxXNYYR7sX3+vPqs="
     crossorigin="anonymous"
   />
   <link 
@@ -561,10 +559,8 @@
 </head>
 <body>
   <script 
-    src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.1/swiper-bundle.min.js"
-    integrity="sha512-/mcWLin9qTJeREsnrY5LMI1B/+32h/3J7fNHs0hQCAft71OUHRcK7CadcXBp3qSQgxOPpvpVkMBDeXEOQk+PVQ==" 
-    crossorigin="anonymous" 
-    referrerpolicy="no-referrer"></script>
+    src="https://unpkg.com/swiper@11.1.1/swiper-bundle.min.js"
+    crossorigin="anonymous"></script>
   <div id="map"></div>
   
   <!-- Fullscreen Gallery Modal -->
@@ -586,7 +582,6 @@
     crossorigin="anonymous"></script>
   <script 
     src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    integrity="sha256-adsLYkUWwGmTWwFODXQLbRNVhs0EJPkOmgHSVhLxYpY="
     crossorigin="anonymous"></script>
   <script>
     // Initialize the map centered on the world for better global experience
@@ -1026,7 +1021,25 @@
         return '<p>No hiking information available</p>';
       }
       
-      return destination.hiking_trails.map(trail => `
+      return destination.hiking_trails.map(trail => {
+        // Remove any problematic trail coordinate handling
+        const trailId = trail.name ? trail.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'trail-map';
+        
+        let mapHtml = '';
+        if (trail.trail_coordinates && trail.trail_coordinates.length > 0) {
+          mapHtml = `
+            <div style="margin: 15px 0;">
+              <div class="section-title">
+                <i class="fas fa-map-marked-alt"></i> Trail Map
+              </div>
+              <div style="height: 200px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid #e0e0e0; position: relative;" id="mini-map-${trailId}"></div>
+              <div style="text-align: center; font-size: 12px; color: #666;">
+                <i class="fas fa-info-circle"></i> Click "Navigate to Trail" for detailed Google Maps directions
+              </div>
+            </div>`;
+        }
+        
+        return `
         <div class="feature-section">
           <div class="section-title">
             <i class="fas fa-hiking"></i> ${trail.name}
@@ -1043,41 +1056,61 @@
             <div class="info-card-content">${trail.description}</div>
           </div>
           
-          ${trail.trail_coordinates && trail.trail_coordinates.length > 0 ? `
-            <div style="margin: 15px 0;">
+          ${mapHtml}
+          
+          <a href="${trail.maps_url || '#'}" class="action-button" title="Get directions to the trail" target="_blank">
+            <i class="fas fa-route"></i> Navigate to Trail
+          </a>
+          
+          ${trail.guided_only ? `
+            <div style="margin-top: 10px;">
+              <a href="${trail.guide_booking_url || '#'}" class="action-button secondary" title="Book a required guide for this trail" target="_blank">
+                <i class="fas fa-user-friends"></i> Book Required Guide
+              </a>
+            </div>
+          ` : ''}
+          
+          ${trail.parking && trail.parking.length > 0 ? `
+            <div style="margin-top: 15px;">
               <div class="section-title">
-                <i class="fas fa-map-marked-alt"></i> Trail Map
+                <i class="fas fa-parking"></i> Parking
               </div>
-              <div style="height: 200px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid #e0e0e0; position: relative;" id="mini-map-${trail.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}"></div>
-              <div style="text-align: center; font-size: 12px; color: #666;">
-                <i class="fas fa-info-circle"></i> Click "Navigate to Trail" for detailed Google Maps directions
+              <ul class="feature-list">
+                ${trail.parking.map(p => `
+                  <li>
+                    <div class="list-item-content">
+                      <div class="list-item-title">${p.name}</div>
+                      <div class="list-item-subtitle">
+                        ${p.fee} · ${p.capacity} spaces
+                        ${p.reservation_required ? ' · Reservation required' : ''}
+                      </div>
+                    </div>
+                    ${p.reservation_url ? `
+                      <div class="list-item-action">
+                        <a href="${p.reservation_url}" class="action-button secondary" style="margin-top: 0; padding: 5px 10px;" title="Book parking" target="_blank">
+                          Book
+                        </a>
+                      </div>
+                    ` : ''}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          
+          ${trail.safety_info ? `
+            <div style="margin-top: 15px;">
+              <div class="section-title">
+                <i class="fas fa-exclamation-triangle"></i> Safety Information
+              </div>
+              <div class="info-card" style="background-color: #fff3cd; border-color: #ffeeba;">
+                <div class="info-card-content">
+                  <strong>Required equipment:</strong> ${trail.safety_info.required_equipment && Array.isArray(trail.safety_info.required_equipment) ? trail.safety_info.required_equipment.join(', ') : 'None'}<br>
+                  <strong>Difficulty factors:</strong> ${trail.safety_info.difficulty_factors || 'Standard trail difficulty'}
+                </div>
               </div>
             </div>
-            <script>
-              // Create mini-map with trail when popup is opened
-              setTimeout(() => {
-                const trailCoords = \${JSON.stringify(trail.trail_coordinates)};
-                const mapId = "mini-map-\${trail.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}";
-                const miniMap = L.map(mapId, {
-                  zoomControl: false,
-                  attributionControl: false,
-                  dragging: false,
-                  scrollWheelZoom: false,
-                  doubleClickZoom: false
-                });
-                
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                  maxZoom: 19
-                }).addTo(miniMap);
-                
-                // Create trail polyline
-                const trailLine = L.polyline(trailCoords, {
-                  color: '#ff5722',
-                  weight: 4,
-                  opacity: 0.8,
-                  lineJoin: 'round',
-                  dashArray: '5, 10'
-                }).addTo(miniMap);
+          ` : ''}
                 
                 // Add start and end markers
                 L.marker(trailCoords[0], {
@@ -1160,7 +1193,8 @@
             </div>
           ` : ''}
         </div>
-      `).join('');
+        `;
+      }).join('');
     }
     
     // Helper function to create accommodations tab content
