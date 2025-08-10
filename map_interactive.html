@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="lib/swiper/swiper-bundle.min.css" />
   <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Global Interactive Travel Map</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
@@ -11,6 +12,46 @@
   <link rel="stylesheet" href="lib/markercluster/MarkerCluster.css" />
   <link rel="stylesheet" href="lib/markercluster/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="lib/fontawesome/all.min.css" />
+  <!-- Polyfills for cross-browser compatibility -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default,fetch,Promise,Object.assign,Array.prototype.findIndex,Array.prototype.find,Array.prototype.includes,String.prototype.includes"></script>
+  
+  <!-- Cross-browser compatibility script -->
+  <script>
+    // Browser detection
+    document.addEventListener('DOMContentLoaded', function() {
+      var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+      var isEdge = /Edg/.test(navigator.userAgent);
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      console.log('Browser detection:', { 
+        isChrome: isChrome, 
+        isEdge: isEdge, 
+        isSafari: isSafari,
+        userAgent: navigator.userAgent
+      });
+      
+      // Add browser-specific CSS classes
+      document.documentElement.classList.add(
+        isChrome ? 'browser-chrome' : 
+        isEdge ? 'browser-edge' : 
+        isSafari ? 'browser-safari' : 'browser-other'
+      );
+      
+      // Fix for Chrome's stricter CORS policy
+      if (isChrome) {
+        console.log('Adding Chrome-specific fixes');
+        // Make sure all fetch requests include credentials and mode
+        var originalFetch = window.fetch;
+        if (originalFetch) {
+          window.fetch = function(resource, options) {
+            options = options || {};
+            options.credentials = options.credentials || 'same-origin';
+            return originalFetch(resource, options);
+          };
+        }
+      }
+    });
+  </script>
   <style>
     body, html {
       width: 100vw;
@@ -97,8 +138,8 @@
       background-color: #007bff;
       border-radius: 6px;
     }
-    /* Safari support */
-    @supports (-webkit-backdrop-filter: none) {
+    /* Cross-browser support for backdrop filters */
+    @supports ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
       #premium-btn {
         -webkit-backdrop-filter: blur(8px);
         backdrop-filter: blur(8px);
@@ -106,6 +147,16 @@
       .leaflet-control-zoom {
         -webkit-backdrop-filter: blur(4px);
         backdrop-filter: blur(4px);
+      }
+    }
+    
+    /* Specific Chrome fixes */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+      .leaflet-marker-icon {
+        transform: translate(-50%, -50%);
+      }
+      .leaflet-control-zoom {
+        background-color: rgba(255, 255, 255, 0.95) !important;
       }
     }
     .popup-image {
@@ -544,19 +595,51 @@
 <body>
   <script src="lib/swiper/swiper-bundle.min.js"></script>
   
-  <!-- Header Bar -->
-  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+  <!-- Collapsible Header Bar -->
+  <div id="header-bar" style="position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
     <div style="font-size: 20px; font-weight: bold; color: #007bff; display: flex; align-items: center;">
-      <i class="fas fa-globe-europe" style="margin-right: 10px; font-size: 24px;"></i> Norway Explorer
+      <i class="fas fa-globe-americas" style="margin-right: 10px; font-size: 24px;"></i> Global Explorer
     </div>
     <div style="display: flex; gap: 10px;">
-      <button onclick="map.setView([63.5, 10.5], 5)" style="background: #f0f7ff; border: 1px solid #cce4ff; color: #007bff; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
-        <i class="fas fa-home"></i> Norway
+      <button onclick="toggleFullscreen()" style="background: #f0f7ff; border: 1px solid #cce4ff; color: #007bff; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+        <i class="fas fa-expand"></i> Fullscreen
       </button>
-      <button style="background: #007bff; color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
-        <i class="fas fa-star"></i> Explore
+      <button id="region-btn" style="background: #007bff; color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+        <i class="fas fa-globe"></i> Regions
+      </button>
+      <button onclick="toggleHeader()" style="background: #f8f9fa; border: 1px solid #dee2e6; color: #495057; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <i id="toggle-icon" class="fas fa-chevron-up"></i>
       </button>
     </div>
+  </div>
+  
+  <!-- Toggle button that appears when header is collapsed -->
+  <div id="show-header-btn" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" onclick="toggleHeader()">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  
+  <!-- Region selection dropdown that appears when Regions button is clicked -->
+  <div id="regions-dropdown" style="position: absolute; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; width: 180px; display: none;">
+    <div style="padding: 12px 16px; font-weight: bold; border-bottom: 1px solid #eee;">Select Region</div>
+    <div onclick="setRegion('europe', [48.5, 10], 4)" style="padding: 10px 16px; cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe-europe" style="margin-right: 8px;"></i> Europe
+    </div>
+    <div onclick="setRegion('asia', [34, 100], 3)" style="padding: 10px 16px; cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe-asia" style="margin-right: 8px;"></i> Asia
+    </div>
+    <div onclick="setRegion('americas', [15, -90], 3)" style="padding: 10px 16px; cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe-americas" style="margin-right: 8px;"></i> Americas
+    </div>
+    <div onclick="setRegion('africa', [5, 20], 3)" style="padding: 10px 16px; cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe-africa" style="margin-right: 8px;"></i> Africa
+    </div>
+    <div onclick="setRegion('oceania', [-25, 135], 4)" style="padding: 10px 16px; cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe-asia" style="margin-right: 8px;"></i> Australia & Oceania
+    </div>
+    <div onclick="setRegion('global', [20, 0], 2)" style="padding: 10px 16px; cursor: pointer; border-top: 1px solid #eee;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+      <i class="fas fa-globe" style="margin-right: 8px;"></i> Global View
+    </div>
+  </div>
   </div>
   
   <div id="map">
@@ -634,8 +717,19 @@
       for (const query of queries) {
         try {
           console.log(`Fetching image for: ${query}`);
+          // Add cache-busting parameter and proper headers for Chrome
+          const options = {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Cache-Control': 'no-cache'
+            },
+            mode: 'cors'
+          };
+          
           const response = await fetch(
-            `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&client_id=${UNSPLASH_ACCESS_KEY}&orientation=landscape&content_filter=high`
+            `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&client_id=${UNSPLASH_ACCESS_KEY}&orientation=landscape&content_filter=high&_cb=${Date.now()}`,
+            options
           );
           
           if (!response.ok) {
@@ -649,26 +743,219 @@
             console.log(`Successfully got image for: ${query}`);
           } else {
             console.log(`No results found for query: ${query}`);
+            // Add a fallback image for Chrome if no results
+            urls.push(`https://images.unsplash.com/photo-1500964757637-c85e8a162699?q=80&w=800`);
           }
         } catch (e) {
           console.error('Error fetching image:', e);
-          // Continue with other queries even if one fails
+          // Add a fallback image if there's an error
+          urls.push(`https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800`);
         }
       }
       return urls;
     }
 
-    // Load JSON data of places
+    // Load JSON data of places with multiple fallback methods
     async function loadPlaces() {
       try {
-        // Load the Norway places data
-        console.log('Attempting to load norway_places.json');
-        const res = await fetch('norway_places.json');
-        if (!res.ok) {
-          throw new Error(`Failed to load norway_places.json: ${res.status}`);
+        // Attempt to load the Norway places data
+        console.log('Attempting to load places data');
+        
+        // Embedded Norway places data as fallback
+        const embeddedData = {
+          "free_places": [
+            {
+              "name": "Geirangerfjord",
+              "coordinates": [62.1048, 7.0941],
+              "description": "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls.",
+              "image_queries": [
+                "Geirangerfjord Norway scenic",
+                "Seven Sisters Waterfall Geirangerfjord",
+                "Geirangerfjord village sunset",
+                "Geirangerfjord fjord cruise",
+                "Geirangerfjord mountains"
+              ]
+            },
+            {
+              "name": "Oslo Opera House",
+              "coordinates": [59.9076, 10.7532],
+              "description": "Modern architectural landmark and cultural hub in Oslo.",
+              "image_queries": [
+                "Oslo Opera House white marble",
+                "Oslo Opera House sunset",
+                "Oslo Opera House rooftop view",
+                "Oslo Opera House interior hall",
+                "Oslo Opera House waterfront"
+              ]
+            },
+            {
+              "name": "Preikestolen",
+              "coordinates": [58.9861, 6.1903],
+              "description": "Also known as Pulpit Rock, a steep cliff rising 604 meters above Lysefjorden.",
+              "image_queries": [
+                "Preikestolen cliff Norway",
+                "Pulpit Rock view Norway",
+                "Preikestolen hiking trail",
+                "Lysefjorden from Preikestolen",
+                "Preikestolen overlook sunset"
+              ]
+            }
+          ],
+          "premium_places": [
+            {
+              "name": "Trolltunga",
+              "coordinates": [60.1249, 6.7406],
+              "description": "A dramatic cliff jutting out 700 meters above Lake Ringedalsvatnet.",
+              "image_queries": [
+                "Trolltunga rock formation Norway",
+                "Trolltunga cliff edge",
+                "Trolltunga people hiking",
+                "Trolltunga panoramic view",
+                "Trolltunga lake view sunrise"
+              ]
+            },
+            {
+              "name": "Lofoten Islands",
+              "coordinates": [68.0685, 13.5804],
+              "description": "A stunning archipelago known for dramatic peaks, fishing villages, and northern lights.",
+              "image_queries": [
+                "Reine Lofoten red cabins",
+                "Lofoten fishing village sunset",
+                "Lofoten northern lights",
+                "Lofoten mountain peaks",
+                "Lofoten beaches arctic"
+              ]
+            },
+            {
+              "name": "Atlantic Ocean Road",
+              "coordinates": [63.0170, 7.3543],
+              "description": "A scenic 8.3 km road connecting islands with daring bridges and spectacular views.",
+              "image_queries": [
+                "Atlantic Ocean Road Norway",
+                "Storseisundet Bridge Norway",
+                "Atlantic Ocean Road sunset",
+                "Atlantic Ocean Road aerial view",
+                "Atlantic Ocean Road stormy weather"
+              ]
+            },
+            {
+              "name": "Bergen",
+              "coordinates": [60.3913, 5.3221],
+              "description": "Norway's second-largest city with colorful wooden houses along the historic Bryggen wharf.",
+              "image_queries": [
+                "Bergen Bryggen colorful houses",
+                "Bergen harbor view",
+                "Bergen fish market",
+                "Bergen from Mount Fløyen",
+                "Bergen Hanseatic Quarter"
+              ]
+            }
+          ]
+        };
+
+        let data;
+        
+        // Try multiple methods to load the data
+        try {
+          // Method 1: Try fetch with enhanced options
+          const fetchOptions = {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            },
+            mode: 'cors',
+            credentials: 'same-origin'
+          };
+          
+          // Add cache-busting parameter
+          const res = await fetch('norway_places.json?' + new Date().getTime(), fetchOptions);
+          if (!res.ok) {
+            throw new Error(`Failed to load norway_places.json: ${res.status}`);
+          }
+          data = await res.json();
+          console.log('Successfully loaded norway_places.json via fetch');
+        } catch (fetchError) {
+          console.warn('Fetch method failed, trying alternative methods:', fetchError);
+          
+          try {
+            // Method 2: Try XMLHttpRequest
+            data = await new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open('GET', 'norway_places.json?' + new Date().getTime(), true);
+              xhr.responseType = 'json';
+              xhr.onload = function() {
+                if (xhr.status === 200) {
+                  if (xhr.response) {
+                    resolve(xhr.response);
+                  } else if (xhr.responseText) {
+                    try {
+                      resolve(JSON.parse(xhr.responseText));
+                    } catch (e) {
+                      reject(new Error('Failed to parse JSON response'));
+                    }
+                  } else {
+                    reject(new Error('Empty response received'));
+                  }
+                } else {
+                  reject(new Error(`XHR failed with status ${xhr.status}`));
+                }
+              };
+              xhr.onerror = function() {
+                reject(new Error('XHR request failed'));
+              };
+              xhr.send();
+            });
+            console.log('Successfully loaded norway_places.json via XMLHttpRequest');
+          } catch (xhrError) {
+            console.warn('All external loading methods failed, using embedded data:', xhrError);
+            // Method 3: Use embedded data as final fallback
+            data = embeddedData;
+            console.log('Using embedded Norway places data as fallback');
+          }
         }
-        const data = await res.json();
-        console.log('Successfully loaded norway_places.json');
+        
+        // Now we need to merge Norway data with global destinations
+        try {
+          // Add each regional destination from globalDestinations to the data object
+          if (!data.free_places) data.free_places = [];
+          
+          // Add Europe destinations
+          if (globalDestinations.europe) {
+            data.free_places = data.free_places.concat(globalDestinations.europe);
+          }
+          
+          // Let's make some destinations premium in other regions
+          if (!data.premium_places) data.premium_places = [];
+          
+          // Americas destinations as premium
+          if (globalDestinations.americas) {
+            data.premium_places = data.premium_places.concat(globalDestinations.americas);
+          }
+          
+          // Add remaining regions to free places
+          if (globalDestinations.asia) {
+            data.free_places = data.free_places.concat(globalDestinations.asia);
+          }
+          
+          if (globalDestinations.africa) {
+            data.free_places = data.free_places.concat(globalDestinations.africa);
+          }
+          
+          if (globalDestinations.oceania) {
+            data.free_places = data.free_places.concat(globalDestinations.oceania);
+          }
+          
+          console.log(`Combined data now has ${data.free_places.length} free places and ${data.premium_places.length} premium places`);
+          
+        } catch (mergeError) {
+          console.error('Error merging global destinations:', mergeError);
+        }
+        
+        // We now have data from one of the loading methods or the embedded fallback
+        console.log('Places data loaded successfully');
         
         // Add Norwegian hiking trail examples to enhance the data
         if (data.free_places && data.free_places.length > 0) {
@@ -796,24 +1083,60 @@
       } catch (e) {
         console.error("Error loading Norway places:", e);
         
-        // Create a fallback dataset with Norway locations
-        const fallbackData = {
-          free_places: [
-            {
-              name: "Geirangerfjord",
-              coordinates: [62.1048, 7.0941],
-              description: "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls.",
-              image_queries: ["Geirangerfjord Norway scenic"]
-            },
-            {
-              name: "Oslo Opera House",
-              coordinates: [59.9076, 10.7532],
-              description: "Modern architectural landmark and cultural hub in Oslo.",
-              image_queries: ["Oslo Opera House white marble"]
-            }
-          ],
-          premium_places: []
-        };
+        // Try alternative loading method for Chrome
+        try {
+          console.log("Trying XMLHttpRequest as fallback method");
+          const xhrPromise = new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'norway_places.json?' + new Date().getTime(), true);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+              if (xhr.status === 200) {
+                resolve(JSON.parse(xhr.responseText));
+              } else {
+                reject(new Error('XHR Error: ' + xhr.status));
+              }
+            };
+            xhr.onerror = function() {
+              reject(new Error('XHR Network Error'));
+            };
+            xhr.send();
+          });
+          
+          const data = await xhrPromise;
+          console.log('Successfully loaded norway_places.json using XHR');
+          return {
+            data: data,
+            isEnhanced: true
+          };
+        } catch (xhrError) {
+          console.error("XHR fallback also failed:", xhrError);
+          
+          // Create a fallback dataset with Norway locations
+          const fallbackData = {
+            free_places: [
+              {
+                name: "Geirangerfjord",
+                coordinates: [62.1048, 7.0941],
+                description: "A famous fjord known for its stunning scenery, steep cliffs, and waterfalls.",
+                image_queries: ["Geirangerfjord Norway scenic"]
+              },
+              {
+                name: "Oslo Opera House",
+                coordinates: [59.9076, 10.7532],
+                description: "Modern architectural landmark and cultural hub in Oslo.",
+                image_queries: ["Oslo Opera House white marble"]
+              },
+              {
+                name: "Preikestolen",
+                coordinates: [58.9861, 6.1903],
+                description: "Also known as Pulpit Rock, a steep cliff rising 604 meters above Lysefjorden.",
+                image_queries: ["Preikestolen cliff Norway"]
+              }
+            ],
+            premium_places: []
+          };
         
         return {
           data: fallbackData,
@@ -1442,53 +1765,115 @@
     // Main function to initialize the map markers
     async function initMap() {
       try {
-        const placesResult = await loadPlaces();
-        const placesData = placesResult.data;
-        const isEnhanced = placesResult.isEnhanced;
+        console.log('Initializing map...');
         
-        // Store the original enhanced data for reference if available
-        const enhancedData = placesResult.originalData;
-
-        // Add all places markers (both free and premium)
-        await addMarkers(placesData.free_places, markersCluster, false);
-        
-        // Add premium places markers too
-        if (placesData.premium_places && placesData.premium_places.length > 0) {
-          await addMarkers(placesData.premium_places, markersCluster, true);
+        // Ensure map is properly initialized
+        if (!map) {
+          console.error('Map not initialized properly');
+          // Try to reinitialize map if needed
+          map = L.map('map', {
+            center: [20, 0], // Global view centered
+            zoom: 2,
+            minZoom: 2,
+            maxZoom: 18,
+            zoomControl: true,
+            fadeAnimation: true,
+            zoomAnimation: true,
+            worldCopyJump: true // Allows seamless horizontal scrolling
+          });
+          
+          // Add better tile layer with terrain details
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: ['a', 'b', 'c'],
+            minZoom: 2,
+            maxZoom: 19
+          }).addTo(map);
         }
         
+        // Load places data with fallbacks
+        const placesData = await loadPlaces();
+        console.log('Places data loaded:', placesData);
+        
+        if (!placesData || (!placesData.free_places && !placesData.premium_places)) {
+          throw new Error('Invalid places data structure');
+        }
+        
+        // Clear any existing markers to avoid duplicates
+        if (markersCluster) {
+          markersCluster.clearLayers();
+        } else {
+          markersCluster = L.markerClusterGroup({
+            showCoverageOnHover: false,
+            maxClusterRadius: 50,
+            spiderfyOnMaxZoom: true
+          });
+        }
+
+        // Add free places markers
+        if (placesData.free_places && placesData.free_places.length > 0) {
+          console.log(`Adding ${placesData.free_places.length} free places markers`);
+          await addMarkers(placesData.free_places, markersCluster, false);
+        } else {
+          console.warn('No free places data available');
+        }
+        
+        // Add premium places markers
+        if (placesData.premium_places && placesData.premium_places.length > 0) {
+          console.log(`Adding ${placesData.premium_places.length} premium places markers`);
+          await addMarkers(placesData.premium_places, markersCluster, true);
+        } else {
+          console.warn('No premium places data available');
+        }
+        
+        // Add marker cluster to map
         markersCluster.addTo(map);
         
         // Setup fullscreen gallery close button
-        document.getElementById('close-gallery').addEventListener('click', () => {
-          document.getElementById('fullscreen-gallery').style.display = 'none';
-        });
+        const closeGalleryBtn = document.getElementById('close-gallery');
+        if (closeGalleryBtn) {
+          closeGalleryBtn.addEventListener('click', () => {
+            document.getElementById('fullscreen-gallery').style.display = 'none';
+          });
+        }
         
         // Close gallery on escape key
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
-            document.getElementById('fullscreen-gallery').style.display = 'none';
+            const gallery = document.getElementById('fullscreen-gallery');
+            if (gallery) {
+              gallery.style.display = 'none';
+            }
           }
         });
         
-        // Optimize map for mobile
-        if (window.innerWidth <= 768) {
-          // Adjust zoom level for mobile
-          map.setZoom(1.5);
-          
-          // Enable touch zoom
-          map.touchZoom.enable();
-          
-          // Add handler for orientation change
-          window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-              map.invalidateSize();
-            }, 200);
-          });
-        }
-      
-      // Return a resolved promise to indicate completion
-      return Promise.resolve();
+        // Optimize map for mobile devices
+        const optimizeForMobile = () => {
+          if (window.innerWidth <= 768) {
+            console.log('Optimizing map for mobile view');
+            map.setZoom(4);  // Slightly higher zoom for mobile
+            map.touchZoom.enable();
+          }
+        };
+        
+        // Call optimization immediately
+        optimizeForMobile();
+        
+        // Re-optimize on orientation change
+        window.addEventListener('orientationchange', () => {
+          setTimeout(() => {
+            map.invalidateSize();
+            optimizeForMobile();
+          }, 200);
+        });
+        
+        // Ensure map properly redraws after any CSS transitions
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 500);
+        
+        console.log('Map initialization completed successfully');
+        return Promise.resolve();
       
       } catch (error) {
         console.error("Error in initMap:", error);
@@ -1496,15 +1881,368 @@
       }
     }
 
-    // Start the map
-    initMap().then(() => {
-      // Hide loading indicator when the map is ready
-      document.getElementById('loading').style.display = 'none';
-    }).catch(error => {
-      console.error("Error initializing map:", error);
-      // Still hide the loading indicator if there's an error
-      document.getElementById('loading').style.display = 'none';
+    // Function to initialize map with retry capability
+    function initializeMapWithRetry(maxRetries = 3, retryDelay = 1000) {
+      let retryCount = 0;
+      
+      function attemptInitialization() {
+        console.log(`Map initialization attempt ${retryCount + 1}/${maxRetries}`);
+        
+        // Try initializing the map
+        initMap().then(() => {
+          console.log('Map initialized successfully');
+          // Hide loading indicator when the map is ready
+          const loadingElement = document.getElementById('loading');
+          if (loadingElement) {
+            loadingElement.style.display = 'none';
+          }
+          
+          // Add premium button if not already added
+          if (typeof addPremiumButton === 'function') {
+            addPremiumButton();
+          }
+          
+          // Refresh the map size in case of any layout shifts
+          if (map) {
+            setTimeout(() => map.invalidateSize(), 100);
+          }
+          
+        }).catch(error => {
+          console.error("Error initializing map:", error);
+          handleInitializationError();
+        });
+      }
+      
+      function handleInitializationError() {
+        retryCount++;
+        if (retryCount < maxRetries) {
+          console.log(`Retrying map initialization in ${retryDelay}ms...`);
+          setTimeout(attemptInitialization, retryDelay);
+        } else {
+          console.error(`Failed to initialize map after ${maxRetries} attempts`);
+          // Hide loading indicator even if there's an error
+          const loadingElement = document.getElementById('loading');
+          if (loadingElement) {
+            loadingElement.style.display = 'none';
+          }
+          
+          // Show error message to user
+          const mapElement = document.getElementById('map');
+          if (mapElement) {
+            mapElement.innerHTML = '<div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 8px; margin: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);"><h3 style="color: #d9534f;">Map Loading Error</h3><p>Unable to load the map. Please try refreshing the page or try a different browser.</p><button onclick="window.location.reload()" style="padding: 8px 16px; background: #0072c6; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">Refresh Page</button></div>';
+          }
+        }
+      }
+      
+      // Start initialization process
+      attemptInitialization();
+    }
+
+    // Global destinations across multiple continents
+    const globalDestinations = {
+      europe: [
+        {
+          name: "Colosseum",
+          coordinates: [41.8902, 12.4922],
+          description: "Ancient Roman amphitheater in Rome, Italy.",
+          image_queries: [
+            "Colosseum Rome Italy",
+            "Colosseum ancient Rome",
+            "Roman Colosseum architecture",
+            "Colosseum interior arena",
+            "Colosseum Rome sunset"
+          ]
+        },
+        {
+          name: "Santorini",
+          coordinates: [36.3932, 25.4615],
+          description: "Greek island known for stunning white buildings and blue domes.",
+          image_queries: [
+            "Santorini white buildings blue domes",
+            "Santorini Greece sunset",
+            "Santorini caldera view",
+            "Oia Santorini Greece",
+            "Santorini beaches"
+          ]
+        },
+        {
+          name: "Eiffel Tower",
+          coordinates: [48.8584, 2.2945],
+          description: "Iconic iron tower on the Champ de Mars in Paris, France.",
+          image_queries: [
+            "Eiffel Tower Paris",
+            "Eiffel Tower night lights",
+            "Eiffel Tower from below",
+            "Paris Eiffel Tower view",
+            "Eiffel Tower Seine river"
+          ]
+        }
+      ],
+      asia: [
+        {
+          name: "Great Wall of China",
+          coordinates: [40.4319, 116.5704],
+          description: "Ancient fortification system built across China's historical northern borders.",
+          image_queries: [
+            "Great Wall of China Mutianyu",
+            "Great Wall China mountain view",
+            "Great Wall China autumn",
+            "Great Wall China panorama",
+            "Great Wall China watchtower"
+          ]
+        },
+        {
+          name: "Angkor Wat",
+          coordinates: [13.4125, 103.8670],
+          description: "Massive temple complex in Cambodia and the largest religious monument in the world.",
+          image_queries: [
+            "Angkor Wat temple Cambodia",
+            "Angkor Wat sunrise",
+            "Angkor Wat reflection",
+            "Angkor Wat stone carvings",
+            "Angkor temple ruins"
+          ]
+        },
+        {
+          name: "Mount Fuji",
+          coordinates: [35.3606, 138.7274],
+          description: "Japan's highest mountain and an active volcano.",
+          image_queries: [
+            "Mount Fuji Japan",
+            "Mount Fuji cherry blossoms",
+            "Mount Fuji reflection lake",
+            "Mount Fuji snow cap",
+            "Mount Fuji sunset"
+          ]
+        }
+      ],
+      americas: [
+        {
+          name: "Machu Picchu",
+          coordinates: [-13.1631, -72.5450],
+          description: "15th-century Inca citadel set high in the Andes Mountains in Peru.",
+          image_queries: [
+            "Machu Picchu Peru",
+            "Machu Picchu Inca ruins",
+            "Machu Picchu mountain view",
+            "Machu Picchu ancient city",
+            "Machu Picchu Huayna Picchu"
+          ]
+        },
+        {
+          name: "Grand Canyon",
+          coordinates: [36.0544, -112.2401],
+          description: "Steep-sided canyon carved by the Colorado River in Arizona, USA.",
+          image_queries: [
+            "Grand Canyon Arizona",
+            "Grand Canyon sunset",
+            "Grand Canyon South Rim",
+            "Grand Canyon Colorado River",
+            "Grand Canyon National Park"
+          ]
+        },
+        {
+          name: "Christ the Redeemer",
+          coordinates: [-22.9519, -43.2105],
+          description: "Art Deco statue of Jesus Christ in Rio de Janeiro, Brazil.",
+          image_queries: [
+            "Christ the Redeemer Rio",
+            "Christ the Redeemer statue Brazil",
+            "Rio de Janeiro Christ statue",
+            "Christ Redeemer aerial view",
+            "Christ Redeemer sunset"
+          ]
+        }
+      ],
+      africa: [
+        {
+          name: "Pyramids of Giza",
+          coordinates: [29.9792, 31.1342],
+          description: "Ancient Egyptian pyramid complex including the Great Sphinx.",
+          image_queries: [
+            "Pyramids of Giza Egypt",
+            "Great Pyramid Giza",
+            "Giza Sphinx pyramids",
+            "Egyptian pyramids sunset",
+            "Pyramids of Giza camel"
+          ]
+        },
+        {
+          name: "Victoria Falls",
+          coordinates: [-17.9243, 25.8572],
+          description: "One of the largest waterfalls in the world, located on the Zambezi River between Zambia and Zimbabwe.",
+          image_queries: [
+            "Victoria Falls waterfall",
+            "Victoria Falls Zambia Zimbabwe",
+            "Victoria Falls aerial view",
+            "Victoria Falls rainbow",
+            "Victoria Falls Devil's Pool"
+          ]
+        },
+        {
+          name: "Mount Kilimanjaro",
+          coordinates: [-3.0674, 37.3556],
+          description: "Africa's highest mountain and the highest single free-standing mountain in the world.",
+          image_queries: [
+            "Mount Kilimanjaro Tanzania",
+            "Kilimanjaro snow cap",
+            "Kilimanjaro summit",
+            "Kilimanjaro national park",
+            "Climbing Mount Kilimanjaro"
+          ]
+        }
+      ],
+      oceania: [
+        {
+          name: "Sydney Opera House",
+          coordinates: [-33.8568, 151.2153],
+          description: "Multi-venue performing arts center in Sydney, Australia.",
+          image_queries: [
+            "Sydney Opera House Australia",
+            "Sydney Opera House harbour",
+            "Sydney Opera House night",
+            "Sydney Opera House architecture",
+            "Sydney Opera House sails"
+          ]
+        },
+        {
+          name: "Great Barrier Reef",
+          coordinates: [-18.2871, 147.6992],
+          description: "World's largest coral reef system off the coast of Queensland, Australia.",
+          image_queries: [
+            "Great Barrier Reef Australia",
+            "Great Barrier Reef coral",
+            "Great Barrier Reef underwater",
+            "Great Barrier Reef aerial",
+            "Great Barrier Reef marine life"
+          ]
+        },
+        {
+          name: "Milford Sound",
+          coordinates: [-44.6414, 167.8974],
+          description: "Fiord in New Zealand's South Island with towering peaks and waterfalls.",
+          image_queries: [
+            "Milford Sound New Zealand",
+            "Milford Sound fiord",
+            "Milford Sound waterfall",
+            "Milford Sound mountains",
+            "Milford Sound cruise"
+          ]
+        }
+      ]
+    };
+
+    // Toggle header visibility
+    function toggleHeader() {
+      const header = document.getElementById('header-bar');
+      const showBtn = document.getElementById('show-header-btn');
+      const toggleIcon = document.getElementById('toggle-icon');
+      
+      if (header.style.transform === 'translateY(-100%)') {
+        // Show header
+        header.style.transform = 'translateY(0)';
+        showBtn.style.display = 'none';
+        toggleIcon.className = 'fas fa-chevron-up';
+      } else {
+        // Hide header
+        header.style.transform = 'translateY(-100%)';
+        showBtn.style.display = 'flex';
+        toggleIcon.className = 'fas fa-chevron-down';
+      }
+      
+      // Ensure map resizes properly
+      setTimeout(() => {
+        if (map) map.invalidateSize();
+      }, 300);
+    }
+    
+    // Toggle fullscreen mode
+    function toggleFullscreen() {
+      const mapElement = document.getElementById('map');
+      
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        if (mapElement.requestFullscreen) {
+          mapElement.requestFullscreen();
+        } else if (mapElement.webkitRequestFullscreen) {
+          mapElement.webkitRequestFullscreen();
+        } else if (mapElement.msRequestFullscreen) {
+          mapElement.msRequestFullscreen();
+        }
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+    
+    // Show/hide region selection dropdown
+    document.getElementById('region-btn').addEventListener('click', function() {
+      const dropdown = document.getElementById('regions-dropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('regions-dropdown');
+      const regionBtn = document.getElementById('region-btn');
+      if (dropdown && regionBtn && !regionBtn.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+    
+    // Set map region
+    function setRegion(region, center, zoom) {
+      if (map) {
+        map.setView(center, zoom);
+        
+        // Hide dropdown
+        document.getElementById('regions-dropdown').style.display = 'none';
+        
+        // Add new region markers if not already added
+        addRegionMarkers(region);
+      }
+    }
+    
+    // Add markers for a specific region
+    function addRegionMarkers(region) {
+      if (globalDestinations[region] && markersCluster) {
+        // Add the markers for this region if not already added
+        addMarkers(globalDestinations[region], markersCluster, false);
+        
+        console.log(`Added markers for ${region} region`);
+      }
+    }
+    
+    // Add additional event listener for fullscreen change
+    document.addEventListener('fullscreenchange', function() {
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 100);
+      }
+    });
+    
+    // Start the map with retry capability
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, starting map initialization...');
+      initializeMapWithRetry();
+      
+      // Add click listener outside the document.addEventListener to ensure it works
+      document.getElementById('region-btn').addEventListener('click', function() {
+        const dropdown = document.getElementById('regions-dropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+    
+    // Fallback initialization if DOMContentLoaded event hasn't fired
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      console.log('Document already loaded, starting map initialization immediately...');
+      initializeMapWithRetry();
+    }
   </script>
 </body>
 </html>
