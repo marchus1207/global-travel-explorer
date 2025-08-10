@@ -12,8 +12,62 @@
   <link rel="stylesheet" href="lib/markercluster/MarkerCluster.css" />
   <link rel="stylesheet" href="lib/markercluster/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="lib/fontawesome/all.min.css" />
-  <!-- Polyfills for cross-browser compatibility -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=default,fetch,Promise,Object.assign,Array.prototype.findIndex,Array.prototype.find,Array.prototype.includes,String.prototype.includes"></script>
+  <!-- Polyfills for cross-browser compatibility - using cdnjs as backup -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.js"></script>
+  
+  <!-- Define essential UI functions early to prevent reference errors -->
+  <script>
+    // Toggle fullscreen mode function
+    function toggleFullscreen() {
+      const mapElement = document.getElementById('map');
+      
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        if (mapElement.requestFullscreen) {
+          mapElement.requestFullscreen();
+        } else if (mapElement.webkitRequestFullscreen) {
+          mapElement.webkitRequestFullscreen();
+        } else if (mapElement.msRequestFullscreen) {
+          mapElement.msRequestFullscreen();
+        }
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+    
+    // Toggle header visibility function
+    function toggleHeader() {
+      const header = document.getElementById('header-bar');
+      const showBtn = document.getElementById('show-header-btn');
+      const toggleIcon = document.getElementById('toggle-icon');
+      
+      if (header && showBtn && toggleIcon) {
+        if (header.style.transform === 'translateY(-100%)') {
+          // Show header
+          header.style.transform = 'translateY(0)';
+          showBtn.style.display = 'none';
+          toggleIcon.className = 'fas fa-chevron-up';
+        } else {
+          // Hide header
+          header.style.transform = 'translateY(-100%)';
+          showBtn.style.display = 'flex';
+          toggleIcon.className = 'fas fa-chevron-down';
+        }
+        
+        // Ensure map resizes properly
+        setTimeout(() => {
+          if (window.map) window.map.invalidateSize();
+        }, 300);
+      }
+    }
+  </script>
   
   <!-- Cross-browser compatibility script -->
   <script>
@@ -1768,10 +1822,10 @@
         console.log('Initializing map...');
         
         // Ensure map is properly initialized
-        if (!map) {
-          console.error('Map not initialized properly');
-          // Try to reinitialize map if needed
-          map = L.map('map', {
+        if (!window.map) {
+          console.log('Creating new map instance');
+          // Create a new map instance
+          window.map = L.map('map', {
             center: [20, 0], // Global view centered
             zoom: 2,
             minZoom: 2,
@@ -1788,12 +1842,12 @@
             subdomains: ['a', 'b', 'c'],
             minZoom: 2,
             maxZoom: 19
-          }).addTo(map);
+          }).addTo(window.map);
           
           // Add zoom control in a better position (away from the header)
           L.control.zoom({
             position: 'bottomright'
-          }).addTo(map);
+          }).addTo(window.map);
         }
         
         // Load places data with fallbacks
@@ -1832,7 +1886,7 @@
         }
         
         // Add marker cluster to map
-        markersCluster.addTo(map);
+        markersCluster.addTo(window.map);
         
         // Setup fullscreen gallery close button
         const closeGalleryBtn = document.getElementById('close-gallery');
@@ -1856,8 +1910,8 @@
         const optimizeForMobile = () => {
           if (window.innerWidth <= 768) {
             console.log('Optimizing map for mobile view');
-            map.setZoom(4);  // Slightly higher zoom for mobile
-            map.touchZoom.enable();
+            window.map.setZoom(4);  // Slightly higher zoom for mobile
+            window.map.touchZoom.enable();
           }
         };
         
@@ -1867,14 +1921,14 @@
         // Re-optimize on orientation change
         window.addEventListener('orientationchange', () => {
           setTimeout(() => {
-            map.invalidateSize();
+            window.map.invalidateSize();
             optimizeForMobile();
           }, 200);
         });
         
         // Ensure map properly redraws after any CSS transitions
         setTimeout(() => {
-          map.invalidateSize();
+          window.map.invalidateSize();
         }, 500);
         
         console.log('Map initialization completed successfully');
@@ -1893,29 +1947,57 @@
       function attemptInitialization() {
         console.log(`Map initialization attempt ${retryCount + 1}/${maxRetries}`);
         
-        // Try initializing the map
-        initMap().then(() => {
-          console.log('Map initialized successfully');
-          // Hide loading indicator when the map is ready
-          const loadingElement = document.getElementById('loading');
-          if (loadingElement) {
-            loadingElement.style.display = 'none';
-          }
-          
-          // Add premium button if not already added
-          if (typeof addPremiumButton === 'function') {
-            addPremiumButton();
-          }
-          
-          // Refresh the map size in case of any layout shifts
-          if (map) {
-            setTimeout(() => map.invalidateSize(), 100);
-          }
-          
-        }).catch(error => {
-          console.error("Error initializing map:", error);
+        try {
+          // Try initializing the map
+          initMap().then(() => {
+            console.log('Map initialized successfully');
+            // Hide loading indicator when the map is ready
+            const loadingElement = document.getElementById('loading');
+            if (loadingElement) {
+              loadingElement.style.display = 'none';
+            }
+            
+            // Add premium button if not already added
+            if (typeof addPremiumButton === 'function') {
+              try {
+                addPremiumButton();
+              } catch (e) {
+                console.error('Error adding premium button:', e);
+              }
+            }
+            
+            // Refresh the map size in case of any layout shifts
+            if (window.map) {
+              setTimeout(() => window.map.invalidateSize(), 100);
+            }
+            
+            // Setup event listeners for map interactions
+            setupMapEventListeners();
+            
+          }).catch(error => {
+            console.error("Error initializing map:", error);
+            handleInitializationError();
+          });
+        } catch (err) {
+          console.error("Critical error during map initialization:", err);
           handleInitializationError();
-        });
+        }
+      }
+      
+      function setupMapEventListeners() {
+        // Setup region dropdown toggle
+        const regionBtn = document.getElementById('region-btn');
+        if (regionBtn) {
+          regionBtn.addEventListener('click', function() {
+            const dropdown = document.getElementById('regions-dropdown');
+            if (dropdown) {
+              dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            }
+          });
+        }
+        
+        // Update header position for map events
+        updateHeaderOnMapEvents();
       }
       
       function handleInitializationError() {
@@ -2137,46 +2219,27 @@
       ]
     };
 
-    // Toggle header visibility
-    function toggleHeader() {
-      const header = document.getElementById('header-bar');
-      const showBtn = document.getElementById('show-header-btn');
-      const toggleIcon = document.getElementById('toggle-icon');
-      
-      if (header.style.transform === 'translateY(-100%)') {
-        // Show header
-        header.style.transform = 'translateY(0)';
-        showBtn.style.display = 'none';
-        toggleIcon.className = 'fas fa-chevron-up';
-      } else {
-        // Hide header
-        header.style.transform = 'translateY(-100%)';
-        showBtn.style.display = 'flex';
-        toggleIcon.className = 'fas fa-chevron-down';
-      }
-      
-      // Ensure map resizes properly
-      setTimeout(() => {
-        if (map) map.invalidateSize();
-      }, 300);
-    }
-    
-    // Ensure the header doesn't follow scroll
-    document.addEventListener('DOMContentLoaded', function() {
+    // Handle map-specific header updates
+    function updateHeaderOnMapEvents() {
       // Disable any scroll-related behavior for the header
       const header = document.getElementById('header-bar');
-      if (header) {
+      if (header && window.map) {
         // Keep the header always at the top
-        map.on('zoom', function() {
+        window.map.on('zoom', function() {
           header.style.position = 'absolute';
           header.style.top = '0';
         });
         
-        map.on('move', function() {
+        window.map.on('move', function() {
           header.style.position = 'absolute';
           header.style.top = '0';
         });
       }
+    }
+    
+    // Ensure the header doesn't follow scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(updateHeaderOnMapEvents, 1000);
     });
     
     // Toggle fullscreen mode
@@ -2221,11 +2284,14 @@
     
     // Set map region
     function setRegion(region, center, zoom) {
-      if (map) {
-        map.setView(center, zoom);
+      if (window.map) {
+        window.map.setView(center, zoom);
         
         // Hide dropdown
-        document.getElementById('regions-dropdown').style.display = 'none';
+        const dropdown = document.getElementById('regions-dropdown');
+        if (dropdown) {
+          dropdown.style.display = 'none';
+        }
         
         // Add new region markers if not already added
         addRegionMarkers(region);
