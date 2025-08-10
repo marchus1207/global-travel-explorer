@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Travel Explorer</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body, html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    #map-container {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+    }
+    
+    #map {
+      height: 100%;
+      width: 100%;
+      z-index: 1;
+    }
+    
+    #header-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+    
+    #header-bar.collapsed {
+      transform: translateY(-100%);
+    }
+    
+    .logo {
+      font-weight: 700;
+      color: #3498db;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      margin-right: 10px;
+      color: #2980b9;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .btn i {
+      margin-right: 6px;
+    }
+    
+    .btn:hover {
+      background: #2980b9;
+    }
+    
+    #toggle-header {
+      background: transparent;
+      color: #555;
+      font-size: 16px;
+    }
+    
+    #toggle-header:hover {
+      color: #000;
+    }
+    
+    #premium-btn {
+      background: #f39c12;
+    }
+    
+    #premium-btn:hover {
+      background: #e67e22;
+    }
+    
+    #fullscreen-btn {
+      background: #2ecc71;
+    }
+    
+    #fullscreen-btn:hover {
+      background: #27ae60;
+    }
+    
+    #region-btn {
+      position: relative;
+    }
+    
+    #regions-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+      width: 150px;
+      padding: 10px 0;
+      display: none;
+      z-index: 1001;
+      margin-top: 5px;
+    }
+    
+    .region-option {
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .region-option:hover {
+      background: #f0f0f0;
+    }
+    
+    #fullscreen-gallery {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1500;
+      padding: 20px;
+      flex-direction: column;
+    }
+    
+    #gallery-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    #gallery-image {
+      max-width: 90%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    
+    #gallery-controls {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      color: white;
+    }
+    
+    .gallery-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+    
+    .gallery-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    #gallery-title {
+      font-size: 22px;
+      margin: 0;
+      color: white;
+    }
+    
+    #gallery-description {
+      color: #ddd;
+      margin: 10px 0 20px;
+    }
+    
+    .premium-marker .leaflet-popup-content-wrapper {
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    }
+    
+    .premium-marker .leaflet-popup-tip {
+      background: #fda085;
+    }
+    
+    .place-popup {
+      width: 250px;
+    }
+    
+    .place-popup h3 {
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .place-popup p {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #555;
+    }
+    
+    .place-popup .gallery-preview {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .place-popup .gallery-preview img {
+      width: 70px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .place-popup .gallery-preview img:hover {
+      transform: scale(1.05);
+    }
+    
+    .place-popup .view-gallery {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    
+    .place-popup .view-gallery:hover {
+      background: #2980b9;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 1.1rem;
+      }
+      
+      .btn {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      
+      #header-bar {
+        padding: 8px 12px;
+      }
+      
+      .controls {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map-container">
+    <div id="header-bar">
+      <div class="logo">
+        <i class="fas fa-globe-americas"></i> Global Travel Explorer
+      </div>
+      <div class="controls">
+        <div id="region-btn" class="btn">
+          <i class="fas fa-map-marked-alt"></i> Regions
+          <div id="regions-dropdown">
+            <div class="region-option" data-region="europe">Europe</div>
+            <div class="region-option" data-region="northAmerica">North America</div>
+            <div class="region-option" data-region="southAmerica">South America</div>
+            <div class="region-option" data-region="africa">Africa</div>
+            <div class="region-option" data-region="asia">Asia</div>
+            <div class="region-option" data-region="oceania">Oceania</div>
+            <div class="region-option" data-region="norway">Norway</div>
+          </div>
+        </div>
+        <button id="premium-btn" class="btn">
+          <i class="fas fa-crown"></i> Premium
+        </button>
+        <button id="fullscreen-btn" class="btn">
+          <i class="fas fa-expand"></i> Fullscreen
+        </button>
+        <button id="toggle-header" class="btn">
+          <i class="fas fa-chevron-up"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div id="map"></div>
+    
+    <!-- Loading indicator -->
+    <div id="loading" style="position: absolute; z-index: 999; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.2); text-align: center; width: 280px;">
+      <div style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #007bff;">
+        <i class="fas fa-globe-americas fa-spin" style="margin-right: 8px;"></i> Loading Global Travel Explorer...
+      </div>
+      <div style="font-size: 14px; color: #555; margin-bottom: 15px;">Please wait while we prepare your adventure</div>
+      <!-- Progress bar -->
+      <div style="width: 100%; background-color: #e9ecef; border-radius: 4px; overflow: hidden; height: 8px; margin-bottom: 10px;">
+        <div id="loading-progress-bar" style="width: 0%; background-color: #007bff; height: 100%; transition: width 0.5s ease-in-out;"></div>
+      </div>
+      <div id="loading-status" style="font-size: 12px; color: #6c757d;">Initializing...</div>
+    </div>
+  </div>
+  
+  <!-- Fullscreen Gallery Modal -->
+  <div id="fullscreen-gallery">
+    <div id="gallery-controls">
+      <button id="gallery-prev" class="gallery-btn">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+      <button id="gallery-close" class="gallery-btn">
+        <i class="fas fa-times"></i> Close
+      </button>
+      <button id="gallery-next" class="gallery-btn">
+        <i class="fas fa-chevron-right"></i> Next
+      </button>
+    </div>
+    <h2 id="gallery-title">Place Title</h2>
+    <p id="gallery-description">Place description will appear here.</p>
+    <div id="gallery-content">
+      <img id="gallery-image" src="" alt="Gallery Image">
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  
+  <script>
+    // Global variables
+    let map;
+    let markersCluster;
+    let currentRegion = 'norway';
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+    let hasLoadedInitial = false;
+    let isInitializing = false;
+    
+    // Browser detection
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM Content Loaded - Setting up environment');
+      
+      // Loading progress tracking
+      let loadingProgress = 0;
+      const updateLoadingProgress = (progress, statusText) => {
+        const progressBar = document.getElementById('loading-progress-bar');
+        const statusElement = document.getElementById('loading-status');
+        if (progressBar) {
+          progressBar.style.width = `${progress}%`;
+          loadingProgress = progress;
+        }
+        if (statusElement && statusText) {
+          statusElement.textContent = statusText;
+        }
+        console.log(`Loading progress: ${progress}% - ${statusText || ''}`);
+      };
+      
+      // Initial progress
+      updateLoadingProgress(10, 'Initializing...');
+      
+      // Set a timeout to hide the loading indicator after 10 seconds no matter what
+      setTimeout(function() {
+        const loadingElement = document.getElementById('loading');
+        if (loadingElement && loadingElement.style.display !== 'none') {
+          console.log('Hiding loading indicator after timeout');
+          updateLoadingProgress(100, 'Complete (timeout)');
+          loadingElement.style.display = 'none';
+        }
+      }, 10000); // 10 seconds timeout
+      
+      // Gradual progress updates
+      const progressSteps = [
+        { progress: 20, delay: 500, status: 'Loading resources...' },
+        { progress: 30, delay: 1000, status: 'Preparing map data...' },
+        { progress: 50, delay: 2000, status: 'Setting up interface...' }
+      ];
+      
+      progressSteps.forEach(step => {
+        setTimeout(() => {
+          updateLoadingProgress(step.progress, step.status);
+        }, step.delay);
+      });
+    
+      var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+      var isEdge = /Edg/.test(navigator.userAgent);
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      console.log('Browser detection:', { 
+        isChrome: isChrome, 
+        isEdge: isEdge, 
+        isSafari: isSafari,
+        userAgent: navigator.userAgent
+      });
+      
+      // Add browser-specific CSS classes
+      document.documentElement.classList.add(
+        isChrome ? 'browser-chrome' : 
+        isEdge ? 'browser-edge' : 
+        isSafari ? 'browser-safari' : 'browser-other'
+      );
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Start the map initialization
+      initializeMapWithRetry();
+    });
+    
+    function setupEventListeners() {
+      console.log('Setting up event listeners');
+      
+      // Toggle header
+      const toggleHeaderBtn = document.getElementById('toggle-header');
+      const header = document.getElementById('header-bar');
+      
+      if (toggleHeaderBtn && header) {
+        toggleHeaderBtn.addEventListener('click', function() {
+          header.classList.toggle('collapsed');
+          
+          // Update the icon based on state
+          const icon = this.querySelector('i');
+          if (icon) {
+            if (header.classList.contains('collapsed')) {
+              icon.className = 'fas fa-chevron-down';
+            } else {
+              icon.className = 'fas fa-chevron-up';
+            }
+          }
+          
+          // Update map size after header toggle
+          if (map) {
+            setTimeout(() => map.invalidateSize(), 300);
+          }
+        });
+      }
+      
+      // Fullscreen button
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      const mapContainer = document.getElementById('map-container');
+      
+      if (fullscreenBtn && mapContainer) {
+        fullscreenBtn.addEventListener('click', function() {
+          toggleFullscreen(mapContainer);
+        });
+      }
+      
+      // Region dropdown
+      const regionBtn = document.getElementById('region-btn');
+      const regionsDropdown = document.getElementById('regions-dropdown');
+      
+      if (regionBtn && regionsDropdown) {
+        // Toggle dropdown
+        regionBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          regionsDropdown.style.display = regionsDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // Handle region selection
+        const regionOptions = document.querySelectorAll('.region-option');
+        regionOptions.forEach(option => {
+          option.addEventListener('click', function() {
+            const region = this.dataset.region;
+            if (region) {
+              changeRegion(region);
+              regionsDropdown.style.display = 'none';
+            }
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+          regionsDropdown.style.display = 'none';
+        });
+      }
+      
+      // Gallery controls
+      const galleryClose = document.getElementById('gallery-close');
+      const galleryPrev = document.getElementById('gallery-prev');
+      const galleryNext = document.getElementById('gallery-next');
+      const fullscreenGallery = document.getElementById('fullscreen-gallery');
+      
+      if (galleryClose && fullscreenGallery) {
+        galleryClose.addEventListener('click', function() {
+          fullscreenGallery.style.display = 'none';
+        });
+      }
+      
+      if (galleryPrev) {
+        galleryPrev.addEventListener('click', function() {
+          if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+            updateGalleryImage();
+          }
+        });
+      }
+      
+      if (galleryNext) {
+        galleryNext.addEventListener('click', function() {
+          if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+            updateGalleryImage();
+          }
+        });
+      }
+    }
+    
+    function toggleFullscreen(element) {
+      if (!document.fullscreenElement) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+        
+        // Update button icon
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        if (fullscreenBtn) {
+          const icon = fullscreenBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-compress';
+          }
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        
+        // Update button icon
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        if (fullscreenBtn) {
+          const icon = fullscreenBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-expand';
+          }
+        }
+      }
+    }
+    
+    // Handle fullscreen change event
+    document.addEventListener('fullscreenchange', function() {
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      if (fullscreenBtn) {
+        const icon = fullscreenBtn.querySelector('i');
+        if (icon) {
+          icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+        }
+      }
+      
+      // Resize map after fullscreen change
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 300);
+      }
+    });
+    
+    function openGallery(place, images) {
+      const fullscreenGallery = document.getElementById('fullscreen-gallery');
+      const galleryTitle = document.getElementById('gallery-title');
+      const galleryDescription = document.getElementById('gallery-description');
+      
+      if (fullscreenGallery && galleryTitle && galleryDescription) {
+        // Update gallery content
+        galleryTitle.textContent = place.name || 'Photo Gallery';
+        galleryDescription.textContent = place.description || '';
+        
+        // Set up gallery images
+        currentGalleryImages = images || [];
+        currentGalleryIndex = 0;
+        
+        // Display the first image
+        updateGalleryImage();
+        
+        // Show the gallery
+        fullscreenGallery.style.display = 'flex';
+      }
+    }
+    
+    function updateGalleryImage() {
+      const galleryImage = document.getElementById('gallery-image');
+      
+      if (galleryImage && currentGalleryImages.length > 0) {
+        galleryImage.src = currentGalleryImages[currentGalleryIndex];
+        galleryImage.alt = `Image ${currentGalleryIndex + 1} of ${currentGalleryImages.length}`;
+      }
+    }
+    
+    function changeRegion(region) {
+      if (!map || region === currentRegion) return;
+      
+      currentRegion = region;
+      console.log(`Changing region to: ${region}`);
+      
+      // Update the UI to reflect the selected region
+      const regionBtn = document.getElementById('region-btn');
+      if (regionBtn) {
+        const btnText = regionBtn.textContent;
+        regionBtn.innerHTML = `<i class="fas fa-map-marked-alt"></i> ${region.charAt(0).toUpperCase() + region.slice(1)}`;
+      }
+      
+      // Clear existing markers
+      if (markersCluster) {
+        markersCluster.clearLayers();
+      }
+      
+      // Set map view based on region
+      const regionCoordinates = {
+        europe: [48.8566, 2.3522], // Paris
+        northAmerica: [37.0902, -95.7129], // USA center
+        southAmerica: [-14.235, -51.9253], // Brazil center
+        africa: [9.082, 8.6753], // Nigeria
+        asia: [34.0479, 100.6197], // China center
+        oceania: [-25.2744, 133.7751], // Australia center
+        norway: [61.9241, 8.0738] // Norway center
+      };
+      
+      const regionZoom = {
+        europe: 4,
+        northAmerica: 3,
+        southAmerica: 3,
+        africa: 3,
+        asia: 3,
+        oceania: 4,
+        norway: 5
+      };
+      
+      // Update map view
+      if (regionCoordinates[region]) {
+        map.setView(regionCoordinates[region], regionZoom[region] || 4);
+      }
+      
+      // Add new region markers
+      addRegionMarkers(region);
+    }
+    
+    // Initialize map with retry capability
+    function initializeMapWithRetry() {
+      if (isInitializing) return;
+      isInitializing = true;
+      
+      const maxRetries = 3;
+      let retryCount = 0;
+      const retryDelay = 2000;
+      
+      function attemptInitialization() {
+        retryCount++;
+        console.log(`Map initialization attempt ${retryCount} of ${maxRetries}`);
+        
+        try {
+          initMap().then(() => {
+            console.log('Map initialized successfully');
+            isInitializing = false;
+            hasLoadedInitial = true;
+            
+            // Hide loading indicator when the map is ready
+            const loadingElement = document.getElementById('loading');
+            if (loadingElement) {
+              console.log('Map initialized: Hiding loading indicator');
+              loadingElement.style.display = 'none';
+            } else {
+              console.warn('Loading indicator element not found when trying to hide after map init');
+            }
+            
+            // Add markers for default region
+            addRegionMarkers(currentRegion);
+            
+            // Refresh the map size
+            if (map) {
+              setTimeout(() => map.invalidateSize(), 300);
+            }
+          }).catch(handleInitError);
+        } catch (error) {
+          handleInitError(error);
+        }
+        
+        function handleInitError(error) {
+          console.error(`Error initializing map (attempt ${retryCount}):`, error);
+          
+          if (retryCount < maxRetries) {
+            console.log(`Retrying map initialization in ${retryDelay}ms...`);
+            setTimeout(attemptInitialization, retryDelay);
+          } else {
+            console.error(`Failed to initialize map after ${maxRetries} attempts`);
+            isInitializing = false;
+            
+            // Update progress to error state and hide loading indicator
+            const updateLoadingProgress = (progress, statusText) => {
+              const progressBar = document.getElementById('loading-progress-bar');
+              const statusElement = document.getElementById('loading-status');
+              if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+                progressBar.style.backgroundColor = '#dc3545'; // Error red
+              }
+              if (statusElement && statusText) {
+                statusElement.textContent = statusText;
+                statusElement.style.color = '#dc3545'; // Error red
+              }
+            };
+            
+            updateLoadingProgress(100, 'Error loading map');
+            
+            // Add a short delay before hiding to show the error state
+            setTimeout(() => {
+              const loadingElement = document.getElementById('loading');
+              if (loadingElement) {
+                console.log('Error occurred: Hiding loading indicator');
+                loadingElement.style.display = 'none';
+              } else {
+                console.warn('Loading indicator element not found when trying to hide after error');
+              }
+              
+              // Show error message to user
+              const mapElement = document.getElementById('map');
+              if (mapElement) {
+                mapElement.innerHTML = '<div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 8px; margin: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);"><h3 style="color: #d9534f;">Map Loading Error</h3><p>Unable to load the map. Please try refreshing the page or try a different browser.</p><button onclick="window.location.reload()" style="padding: 8px 16px; background: #0072c6; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">Refresh Page</button></div>';
+              }
+            }, 1000);
+          }
+        }
+      }
+      
+      // Start the initialization process
+      attemptInitialization();
+    }
+    
+    // Main function to initialize the map
+    async function initMap() {
+      try {
+        console.log('Initializing map...');
+        
+        // Update loading progress
+        const updateLoadingProgress = (progress, statusText) => {
+          const progressBar = document.getElementById('loading-progress-bar');
+          const statusElement = document.getElementById('loading-status');
+          if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+          }
+          if (statusElement && statusText) {
+            statusElement.textContent = statusText;
+          }
+          console.log(`Loading progress: ${progress}% - ${statusText || ''}`);
+        };
+        
+        updateLoadingProgress(60, 'Creating map...');
+        
+        // Ensure map is properly initialized
+        if (!map) {
+          console.log('Creating new map instance');
+          
+          // Create a new map instance
+          map = L.map('map', {
+            center: [61.9241, 8.0738], // Norway center
+            zoom: 5,
+            minZoom: 2,
+            maxZoom: 18,
+            zoomControl: false, // We'll add zoom control manually
+            fadeAnimation: true,
+            zoomAnimation: true,
+            worldCopyJump: true // Allows seamless horizontal scrolling
+          });
+          
+          // Add tile layer
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: ['a', 'b', 'c'],
+            minZoom: 2,
+            maxZoom: 19
+          }).addTo(map);
+          
+          // Update progress
+          updateLoadingProgress(70, 'Adding map controls...');
+          
+          // Add zoom control in a better position
+          L.control.zoom({
+            position: 'bottomright'
+          }).addTo(map);
+          
+          // Create marker cluster group for better performance
+          markersCluster = L.markerClusterGroup({
+            maxClusterRadius: 40,
+            disableClusteringAtZoom: 10,
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false
+          });
+          
+          map.addLayer(markersCluster);
+        }
+        
+        // Load places data
+        await loadPlacesData();
+        
+        return Promise.resolve();
+      } catch (error) {
+        console.error('Error in initMap:', error);
+        return Promise.reject(error);
+      }
+    }
+    
+    // Load places data
+    async function loadPlacesData() {
+      try {
+        // Try to fetch data from local file
+        console.log('Loading places data from norway_places.json');
+        updateLoadingProgress(75, 'Loading destinations...');
+        
+        const response = await fetch('norway_places.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const placesData = await response.json();
+        console.log('Places data loaded successfully');
+        updateLoadingProgress(90, 'Processing destinations...');
+        
+        // Process and store data for each region
+        processPlacesData(placesData);
+        
+        updateLoadingProgress(95, 'Finalizing...');
+        return Promise.resolve();
+      } catch (error) {
+        console.error('Error loading places data:', error);
+        // Use embedded data as fallback
+        processPlacesData(getEmbeddedData());
+        return Promise.resolve();
+      }
+    }
+    
+    // Process places data
+    function processPlacesData(data) {
+      window.globalDestinations = {
+        norway: data.norway || [],
+        europe: data.europe || getEuropeData(),
+        northAmerica: data.northAmerica || getNorthAmericaData(),
+        southAmerica: data.southAmerica || getSouthAmericaData(),
+        africa: data.africa || getAfricaData(),
+        asia: data.asia || getAsiaData(),
+        oceania: data.oceania || getOceaniaData()
+      };
+      
+      console.log('Places data processed and stored globally');
+    }
+    
+    // Add markers for places
+    async function addMarkers(places, markerGroup, isPremium = false) {
+      if (!places || !Array.isArray(places) || !markerGroup) {
+        console.warn('Invalid places data or marker group');
+        return;
+      }
+      
+      console.log(`Adding ${places.length} markers to the map`);
+      
+      places.forEach(place => {
+        if (!place.coordinates || !Array.isArray(place.coordinates) || place.coordinates.length !== 2) {
+          console.warn('Invalid coordinates for place:', place);
+          return;
+        }
+        
+        // Create marker
+        const marker = L.marker(place.coordinates, {
+          title: place.name,
+          alt: place.name
+        });
+        
+        // Add premium class if needed
+        const popupClassName = isPremium ? 'premium-marker' : '';
+        
+        // Create popup content
+        const popupContent = createPopupContent(place);
+        
+        // Bind popup to marker
+        marker.bindPopup(popupContent, {
+          maxWidth: 300,
+          className: popupClassName,
+          autoPanPadding: [50, 50]
+        });
+        
+        // Add marker to the cluster group
+        markerGroup.addLayer(marker);
+      });
+    }
+    
+    // Create popup content for a place
+    function createPopupContent(place) {
+      let images = [];
+      
+      // Generate image URLs based on queries
+      if (place.image_queries && Array.isArray(place.image_queries)) {
+        images = place.image_queries.map(query => {
+          // Simplified image URL generation for demo
+          // In production, this would be replaced with actual image URLs
+          return `https://source.unsplash.com/400x300/?${encodeURIComponent(query)}`;
+        });
+      }
+      
+      // Create image preview HTML if we have images
+      let imagePreviewHTML = '';
+      if (images.length > 0) {
+        imagePreviewHTML = `
+          <div class="gallery-preview">
+            ${images.slice(0, 3).map(img => `
+              <img src="${img}" alt="${place.name}" onclick="openGalleryFromThumbnail(this, ${JSON.stringify(place).replace(/"/g, '&quot;')}, ${JSON.stringify(images).replace(/"/g, '&quot;')})">
+            `).join('')}
+          </div>
+          <button class="view-gallery" onclick="openGalleryFromButton(${JSON.stringify(place).replace(/"/g, '&quot;')}, ${JSON.stringify(images).replace(/"/g, '&quot;')})">
+            <i class="fas fa-images"></i> View Gallery (${images.length})
+          </button>
+        `;
+      }
+      
+      // Construct the popup HTML
+      return `
+        <div class="place-popup">
+          <h3>${place.name}</h3>
+          <p>${place.description}</p>
+          ${imagePreviewHTML}
+        </div>
+      `;
+    }
+    
+    // Open gallery from thumbnail click
+    window.openGalleryFromThumbnail = function(imgElement, place, images) {
+      // Find the index of the clicked image
+      const clickedSrc = imgElement.src;
+      const index = images.findIndex(img => img === clickedSrc);
+      
+      currentGalleryIndex = Math.max(0, index);
+      openGallery(place, images);
+    };
+    
+    // Open gallery from button click
+    window.openGalleryFromButton = function(place, images) {
+      openGallery(place, images);
+    };
+    
+    // Add region markers
+    function addRegionMarkers(region) {
+      if (window.globalDestinations && window.globalDestinations[region] && markersCluster) {
+        const regionData = window.globalDestinations[region];
+        console.log(`Adding ${regionData.length} markers for ${region} region`);
+        
+        // Update loading progress
+        updateLoadingProgress(80, `Loading ${region} destinations...`);
+        
+        // Add the markers
+        addMarkers(regionData, markersCluster, false);
+        
+        console.log(`Added markers for ${region} region`);
+        updateLoadingProgress(100, 'Complete');
+      }
+    }
+    
+    // Fallback data functions
+    function getEmbeddedData() {
+      console.log('Using embedded data as fallback');
+      return {
+        norway: [
+          {
+            "name": "Oslo",
+            "coordinates": [59.9139, 10.7522],
+            "description": "Norway's capital and most populous city, featuring world-class museums and beautiful parks.",
+            "image_queries": [
+              "Oslo Opera House",
+              "Vigeland Sculpture Park Oslo",
+              "Oslo Royal Palace",
+              "Oslo harbor",
+              "Akershus Fortress Oslo"
+            ]
+          },
+          {
+            "name": "Bergen",
+            "coordinates": [60.3913, 5.3221],
+            "description": "Norway's second-largest city with colorful wooden houses along the historic Bryggen wharf.",
+            "image_queries": [
+              "Bergen Bryggen colorful houses",
+              "Bergen harbor view",
+              "Bergen fish market",
+              "Bergen from Mount Fløyen",
+              "Bergen Hanseatic Quarter"
+            ]
+          },
+          {
+            "name": "Tromsø",
+            "coordinates": [69.6492, 18.9553],
+            "description": "City in northern Norway known as a viewing point for colorful northern lights.",
+            "image_queries": [
+              "Northern Lights Tromsø",
+              "Arctic Cathedral Tromsø",
+              "Tromsø bridge",
+              "Tromsø aerial view",
+              "Tromsø midnight sun"
+            ]
+          }
+        ]
+      };
+    }
+    
+    function getEuropeData() {
+      return [
+        {
+          "name": "Paris",
+          "coordinates": [48.8566, 2.3522],
+          "description": "The capital of France, known for its art, fashion, gastronomy and culture.",
+          "image_queries": ["Eiffel Tower", "Louvre Museum", "Notre Dame Cathedral", "Seine River", "Arc de Triomphe"]
+        },
+        {
+          "name": "Rome",
+          "coordinates": [41.9028, 12.4964],
+          "description": "Italy's capital city with nearly 3,000 years of globally influential art, architecture and culture.",
+          "image_queries": ["Roman Colosseum", "Vatican City", "Trevi Fountain", "Roman Forum", "Spanish Steps"]
+        },
+        {
+          "name": "Barcelona",
+          "coordinates": [41.3851, 2.1734],
+          "description": "Cosmopolitan capital of Spain's Catalonia region, known for art and architecture.",
+          "image_queries": ["Sagrada Familia", "Park Güell", "La Rambla", "Barcelona Beach", "Gothic Quarter"]
+        }
+      ];
+    }
+    
+    function getNorthAmericaData() {
+      return [
+        {
+          "name": "New York City",
+          "coordinates": [40.7128, -74.006],
+          "description": "Major US metropolis known for its iconic skyline, arts, culture and financial centers.",
+          "image_queries": ["New York skyline", "Times Square", "Central Park", "Brooklyn Bridge", "Statue of Liberty"]
+        },
+        {
+          "name": "Banff National Park",
+          "coordinates": [51.4968, -115.9281],
+          "description": "Mountain landscape with turquoise lakes and dense pine forest in Alberta, Canada.",
+          "image_queries": ["Lake Louise", "Moraine Lake", "Banff Mountains", "Banff wildlife", "Banff winter"]
+        },
+        {
+          "name": "Cancún",
+          "coordinates": [21.1619, -86.8515],
+          "description": "Mexican city on the Yucatán Peninsula bordering the Caribbean Sea with beaches and nightlife.",
+          "image_queries": ["Cancun Beach", "Cancun resort", "Tulum ruins", "Cenote swimming", "Isla Mujeres"]
+        }
+      ];
+    }
+    
+    function getSouthAmericaData() {
+      return [
+        {
+          "name": "Machu Picchu",
+          "coordinates": [-13.1631, -72.5450],
+          "description": "15th-century Inca citadel situated on a mountain ridge above Peru's Sacred Valley.",
+          "image_queries": ["Machu Picchu ruins", "Machu Picchu mountain", "Inca Trail", "Huayna Picchu", "Machu Picchu sunrise"]
+        },
+        {
+          "name": "Rio de Janeiro",
+          "coordinates": [-22.9068, -43.1729],
+          "description": "Seaside city in Brazil known for its beaches, mountains and carnival festival.",
+          "image_queries": ["Christ the Redeemer", "Copacabana Beach", "Sugarloaf Mountain", "Rio Carnival", "Ipanema Beach"]
+        },
+        {
+          "name": "Torres del Paine",
+          "coordinates": [-50.9423, -73.4068],
+          "description": "National park in Chile's Patagonia region with mountains, glaciers, lakes, and rivers.",
+          "image_queries": ["Torres del Paine mountains", "Cuernos del Paine", "Grey Glacier", "Patagonia landscape", "Paine Grande"]
+        }
+      ];
+    }
+    
+    function getAfricaData() {
+      return [
+        {
+          "name": "Serengeti National Park",
+          "coordinates": [-2.3333, 34.8333],
+          "description": "Tanzania's vast savannah wilderness known for its annual migration of wildebeests.",
+          "image_queries": ["Serengeti wildebeest migration", "Serengeti lions", "Serengeti sunset", "African savannah", "Serengeti balloon safari"]
+        },
+        {
+          "name": "Cape Town",
+          "coordinates": [-33.9249, 18.4241],
+          "description": "Legislative capital of South Africa, nestled between mountains and the Atlantic Ocean.",
+          "image_queries": ["Table Mountain", "Cape Town waterfront", "Cape of Good Hope", "Cape Town beaches", "Bo-Kaap"]
+        },
+        {
+          "name": "Pyramids of Giza",
+          "coordinates": [29.9773, 31.1325],
+          "description": "Ancient Egyptian pyramids on the outskirts of Cairo, including the Great Pyramid.",
+          "image_queries": ["Great Pyramid of Giza", "Sphinx Egypt", "Egyptian pyramids", "Giza plateau", "Inside Egyptian pyramid"]
+        }
+      ];
+    }
+    
+    function getAsiaData() {
+      return [
+        {
+          "name": "Mount Everest",
+          "coordinates": [27.9881, 86.9250],
+          "description": "Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas.",
+          "image_queries": ["Mount Everest summit", "Everest Base Camp", "Himalayan mountains", "Everest climbing expedition", "Everest aerial view"]
+        },
+        {
+          "name": "Kyoto",
+          "coordinates": [35.0116, 135.7681],
+          "description": "Former capital of Japan known for its classical Buddhist temples and traditional wooden houses.",
+          "image_queries": ["Fushimi Inari Shrine", "Arashiyama Bamboo Grove", "Kinkaku-ji Golden Pavilion", "Kyoto geisha", "Japanese zen garden"]
+        },
+        {
+          "name": "Bali",
+          "coordinates": [-8.3405, 115.0920],
+          "description": "Indonesian island known for its forested volcanic mountains, beaches and coral reefs.",
+          "image_queries": ["Bali rice terraces", "Bali temples", "Ubud Bali", "Bali beaches", "Bali waterfalls"]
+        }
+      ];
+    }
+    
+    function getOceaniaData() {
+      return [
+        {
+          "name": "Great Barrier Reef",
+          "coordinates": [-18.2871, 147.6992],
+          "description": "World's largest coral reef system off the coast of Australia, home to diverse marine life.",
+          "image_queries": ["Great Barrier Reef aerial", "Coral reef diving", "Great Barrier Reef fish", "Heart Reef", "Australia coral reef"]
+        },
+        {
+          "name": "Sydney",
+          "coordinates": [-33.8688, 151.2093],
+          "description": "Australia's largest city known for its harbor front Sydney Opera House and Harbour Bridge.",
+          "image_queries": ["Sydney Opera House", "Sydney Harbour Bridge", "Bondi Beach", "Sydney skyline", "Sydney Darling Harbour"]
+        },
+        {
+          "name": "Milford Sound",
+          "coordinates": [-44.6414, 167.8974],
+          "description": "Fiord in New Zealand's South Island known for towering Mitre Peak and waterfalls.",
+          "image_queries": ["Milford Sound fiord", "Mitre Peak", "Milford Sound waterfall", "New Zealand fjord", "Milford Sound cruise"]
+        }
+      ];
+    }
+    
+    // Helper function to update loading progress
+    function updateLoadingProgress(progress, statusText) {
+      const progressBar = document.getElementById('loading-progress-bar');
+      const statusElement = document.getElementById('loading-status');
+      if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+      }
+      if (statusElement && statusText) {
+        statusElement.textContent = statusText;
+      }
+      console.log(`Loading progress: ${progress}% - ${statusText || ''}`);
+    }
+    
+    // Handle map-specific header updates
+    function updateHeaderOnMapEvents() {
+      const header = document.getElementById('header-bar');
+      if (header && map) {
+        // Keep the header always at the top
+        map.on('zoom', function() {
+          header.style.position = 'absolute';
+          header.style.top = '0';
+        });
+        
+        map.on('move', function() {
+          header.style.position = 'absolute';
+          header.style.top = '0';
+        });
+      }
+    }
+    
+    // Add additional event listener for fullscreen change
+    document.addEventListener('fullscreenchange', function() {
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 100);
+      }
+    });
+    
+    // Fallback initialization if DOMContentLoaded event hasn't fired
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      console.log('Document already loaded, starting map initialization immediately...');
+      initializeMapWithRetry();
+    }
+  </script>
+</body>
+</html>
